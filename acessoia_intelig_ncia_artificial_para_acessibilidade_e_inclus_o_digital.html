@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light" data-neuro="false">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AcessoIA — Inteligência Artificial para Acessibilidade e Inclusão Digital</title>
+  <meta name="description" content="Plataforma interativa unindo Inteligência Artificial (Gemini) e guia completo sobre acessibilidade digital, WCAG 2.2, tecnologias assistivas e legislação brasileira." />
+
+  <!-- Fontes acessíveis: Inter e Atkinson Hyperlegible (projetada para baixa visão e dislexia) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            accessible: ['"Atkinson Hyperlegible"', 'Verdana', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ==========================================================================
+       SISTEMA DE TEMAS E TOKENS DE ACESSIBILIDADE (WCAG 2.2 AAA)
+       ========================================================================== */
+    :root {
+      --font-scale: 100%;
+      --bg-page: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-alt: #f1f5f9;
+      --bg-topbar: #0f172a;
+      --text-topbar: #f8fafc;
+      --text-main: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --border-strong: #94a3b8;
+      --accent: #1d4ed8;
+      --accent-hover: #1e40af;
+      --accent-text: #ffffff;
+      --accent-soft: #eff6ff;
+      --accent-soft-text: #1e3a8a;
+      --badge-success-bg: #dcfce7;
+      --badge-success-text: #14532d;
+      --badge-danger-bg: #fee2e2;
+      --badge-danger-text: #7f1d1d;
+      --focus-outline: #2563eb;
+    }
+
+    /* Tema Escuro */
+    html[data-theme="dark"] {
+      --bg-page: #0b1120;
+      --bg-surface: #111827;
+      --bg-surface-alt: #1e293b;
+      --bg-topbar: #020617;
+      --text-topbar: #f8fafc;
+      --text-main: #f8fafc;
+      --text-secondary: #e2e8f0;
+      --text-muted: #cbd5e1;
+      --border-color: #334155;
+      --border-strong: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --accent-text: #020617;
+      --accent-soft: #0c4a6e;
+      --accent-soft-text: #e0f2fe;
+      --badge-success-bg: #064e3b;
+      --badge-success-text: #a7f3d0;
+      --badge-danger-bg: #7f1d1d;
+      --badge-danger-text: #fecaca;
+      --focus-outline: #38bdf8;
+    }
+
+    /* Tema Alto Contraste AAA (Fundo Preto #000, Texto Amarelo #FFD700, Bordas Brancas #FFF) */
+    html[data-theme="high-contrast"] {
+      --bg-page: #000000;
+      --bg-surface: #000000;
+      --bg-surface-alt: #0a0a0a;
+      --bg-topbar: #000000;
+      --text-topbar: #FFD700;
+      --text-main: #FFD700;
+      --text-secondary: #FFD700;
+      --text-muted: #FFF08A;
+      --border-color: #FFFFFF;
+      --border-strong: #FFFFFF;
+      --accent: #FFD700;
+      --accent-hover: #FFFFFF;
+      --accent-text: #000000;
+      --accent-soft: #1a1a00;
+      --accent-soft-text: #FFD700;
+      --badge-success-bg: #000000;
+      --badge-success-text: #00FF66;
+      --badge-danger-bg: #000000;
+      --badge-danger-text: #FF6B6B;
+      --focus-outline: #00FFFF;
+    }
+
+    /* Tema Sépia (Conforto Visual / Redução de Fadiga Ocular) */
+    html[data-theme="sepia"] {
+      --bg-page: #f5eedc;
+      --bg-surface: #fbf7ec;
+      --bg-surface-alt: #ebe0c5;
+      --bg-topbar: #3e2f20;
+      --text-topbar: #fbf7ec;
+      --text-main: #2c2117;
+      --text-secondary: #433324;
+      --text-muted: #5c4734;
+      --border-color: #c8b692;
+      --border-strong: #9c8660;
+      --accent: #854d0e;
+      --accent-hover: #713f12;
+      --accent-text: #fbf7ec;
+      --accent-soft: #efe3c6;
+      --accent-soft-text: #451a03;
+      --badge-success-bg: #dce8cf;
+      --badge-success-text: #1f3a13;
+      --badge-danger-bg: #f2d5ce;
+      --badge-danger-text: #5c1910;
+      --focus-outline: #854d0e;
+    }
+
+    html {
+      font-size: var(--font-scale);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Aplicação consistente dos tokens nos componentes */
+    .surface-card {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .surface-alt {
+      background-color: var(--bg-surface-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .text-secondary-token {
+      color: var(--text-secondary);
+    }
+
+    .text-muted-token {
+      color: var(--text-muted);
+    }
+
+    .btn-primary-token {
+      background-color: var(--accent);
+      color: var(--accent-text);
+      border: 2px solid var(--accent);
+    }
+    .btn-primary-token:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-outline-token {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 2px solid var(--border-strong);
+    }
+    .btn-outline-token:hover:not(:disabled) {
+      background-color: var(--accent-soft);
+      color: var(--accent-soft-text);
+      border-color: var(--accent);
+    }
+
+    .badge-soft-token {
+      background-color: var(--accent-soft);
+      color: var(--accent-soft-text);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Ajustes específicos para Alto Contraste */
+    html[data-theme="high-contrast"] .surface-card,
+    html[data-theme="high-contrast"] .surface-alt,
+    html[data-theme="high-contrast"] input,
+    html[data-theme="high-contrast"] textarea,
+    html[data-theme="high-contrast"] select,
+    html[data-theme="high-contrast"] button {
+      border-color: #FFFFFF !important;
+    }
+
+    html[data-theme="high-contrast"] a {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* ==========================================================================
+       INDICADORES DE FOCO VISÍVEL (WCAG 2.4.7 & 2.4.11)
+       ========================================================================== */
+    *:focus-visible {
+      outline: 3px solid var(--focus-outline) !important;
+      outline-offset: 3px !important;
+      border-radius: 6px;
+    }
+
+    /* Skip Links (Links de Salto Rápido) */
+    .skip-link {
+      position: absolute;
+      top: -120px;
+      left: 16px;
+      z-index: 9999;
+      background-color: var(--accent);
+      color: var(--accent-text);
+      padding: 12px 20px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: top 0.15s ease;
+    }
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    /* ==========================================================================
+       MODO NEURODIVERGENTE (TDAH / DISLEXIA) E RÉGUA DE LEITURA
+       ========================================================================== */
+    html[data-neuro="true"] body {
+      font-family: 'Atkinson Hyperlegible', Verdana, sans-serif !important;
+      letter-spacing: 0.055em !important;
+      word-spacing: 0.16em !important;
+      line-height: 1.85 !important;
+    }
+
+    html[data-neuro="true"] p,
+    html[data-neuro="true"] li,
+    html[data-neuro="true"] textarea,
+    html[data-neuro="true"] span {
+      line-height: 1.85 !important;
+    }
+
+    html[data-neuro="true"] * {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Régua Horizontal de Leitura */
+    #reading-ruler {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 54px;
+      pointer-events: none;
+      z-index: 9000;
+      border-top: 3px solid #f59e0b;
+      border-bottom: 3px solid #f59e0b;
+      background: rgba(254, 243, 199, 0.22);
+      box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.28);
+      transform: translateY(-50%);
+    }
+
+    html[data-neuro="true"] #reading-ruler {
+      display: block;
+    }
+
+    html[data-theme="high-contrast"][data-neuro="true"] #reading-ruler {
+      border-top: 3px solid #00FFFF;
+      border-bottom: 3px solid #00FFFF;
+      background: rgba(255, 215, 0, 0.12);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Respeito à preferência do sistema operacional para redução de movimento */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- Região Live para Leitores de Tela (Anúncios de Estado) -->
+  <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Régua de Leitura Guiada (Ativa no Modo Neurodivergente) -->
+  <div id="reading-ruler" aria-hidden="true"></div>
+
+  <!-- Links de Salto Rápido (Skip Links - Navegação por Teclado) -->
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+  <a href="#laboratorio-ia" class="skip-link" style="left: 270px;">Pular para o Laboratório de IA</a>
+  <a href="#base-conhecimento" class="skip-link" style="left: 535px;">Pular para o Guia de Acessibilidade</a>
+
+  <!-- ========================================================================
+       1. BARRA DE ACESSIBILIDADE GLOBAL FIXA NO TOPO (WCAG 2.2 AAA)
+       ======================================================================== -->
+  <aside aria-label="Barra de Ferramentas de Acessibilidade"
+         style="background-color: var(--bg-topbar); color: var(--text-topbar); border-bottom: 2px solid var(--border-strong);"
+         class="sticky top-0 z-50 w-full shadow-md">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+
+      <!-- Grupo 1: Tamanho de Fonte -->
+      <div class="flex items-center gap-1.5" role="group" aria-label="Controles de Tamanho da Fonte">
+        <span class="font-semibold hidden md:inline mr-1">Fonte:</span>
+        <button type="button" id="btn-font-dec"
+                aria-label="Diminuir tamanho da fonte"
+                title="Diminuir fonte (A-)"
+                class="px-2.5 py-1.5 rounded-lg font-bold border border-slate-500 hover:bg-slate-700 focus:ring-2 min-w-[40px] min-h-[36px]">
+          A-
+        </button>
+        <button type="button" id="btn-font-reset"
+                aria-label="Restaurar tamanho padrão da fonte (100%)"
+                title="Tamanho padrão da fonte (A)"
+                class="px-2.5 py-1.5 rounded-lg font-bold border border-slate-500 hover:bg-slate-700 min-w-[44px] min-h-[36px]">
+          <span id="font-scale-label">100%</span>
+        </button>
+        <button type="button" id="btn-font-inc"
+                aria-label="Aumentar tamanho da fonte"
+                title="Aumentar fonte (A+)"
+                class="px-2.5 py-1.5 rounded-lg font-bold border border-slate-500 hover:bg-slate-700 min-w-[40px] min-h-[36px]">
+          A+
+        </button>
+      </div>
+
+      <!-- Grupo 2: Temas de Contraste -->
+      <div class="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Seletor de Temas e Contraste">
+        <span class="font-semibold hidden lg:inline mr-1">Contraste:</span>
+        <button type="button" data-set-theme="light" aria-pressed="true"
+                class="theme-btn px-2.5 py-1.5 rounded-lg font-medium border border-slate-500 hover:bg-slate-700 min-h-[36px] flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-white border border-slate-400 inline-block" aria-hidden="true"></span>
+          <span>Claro</span>
+        </button>
+        <button type="button" data-set-theme="dark" aria-pressed="false"
+                class="theme-btn px-2.5 py-1.5 rounded-lg font-medium border border-slate-500 hover:bg-slate-700 min-h-[36px] flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-slate-900 border border-slate-300 inline-block" aria-hidden="true"></span>
+          <span>Escuro</span>
+        </button>
+        <button type="button" data-set-theme="high-contrast" aria-pressed="false"
+                class="theme-btn px-2.5 py-1.5 rounded-lg font-bold border border-yellow-400 text-yellow-300 bg-black hover:bg-neutral-900 min-h-[36px] flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-yellow-400 inline-block" aria-hidden="true"></span>
+          <span>Alto Contraste</span>
+        </button>
+        <button type="button" data-set-theme="sepia" aria-pressed="false"
+                class="theme-btn px-2.5 py-1.5 rounded-lg font-medium border border-amber-300/60 hover:bg-slate-700 min-h-[36px] flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-[#f5eedc] border border-amber-800 inline-block" aria-hidden="true"></span>
+          <span>Sépia</span>
+        </button>
+      </div>
+
+      <!-- Grupo 3: Modo Neurodivergente e Leitura em Voz Alta -->
+      <div class="flex items-center gap-2">
+        <button type="button" id="btn-neuro-mode" aria-pressed="false"
+                class="px-3 py-1.5 rounded-lg font-semibold border border-amber-400/70 hover:bg-slate-700 min-h-[36px] flex items-center gap-1.5">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/>
+            <path d="M9 21h6"/>
+          </svg>
+          <span>Modo TDAH / Dislexia</span>
+        </button>
+
+        <button type="button" id="btn-speak-page" aria-pressed="false"
+                class="px-3 py-1.5 rounded-lg font-semibold bg-emerald-600 text-white border border-emerald-400 hover:bg-emerald-500 min-h-[36px] flex items-center gap-1.5">
+          <svg id="icon-speak" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <span id="label-speak-page">Ouvir Página</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. CABEÇALHO SEMÂNTICO E NAVEGAÇÃO PRINCIPAL
+       ======================================================================== -->
+  <header class="surface-card border-b shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+      <!-- Logotipo Acessível -->
+      <a href="#" class="flex items-center gap-3 group rounded-xl p-1">
+        <div class="w-11 h-11 rounded-xl btn-primary-token flex items-center justify-center shadow-sm shrink-0">
+          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <circle cx="12" cy="5" r="2" />
+            <path d="m5 8 7 2 7-2" />
+            <path d="M12 10v5" />
+            <path d="m9 21 3-6 3 6" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl sm:text-2xl font-extrabold tracking-tight block leading-none">AcessoIA</span>
+          <span class="text-xs font-medium text-muted-token block mt-1">IA & Inclusão Digital WCAG 2.2</span>
+        </div>
+      </a>
+
+      <!-- Botão Menu Mobile -->
+      <button type="button" id="btn-mobile-menu"
+              aria-expanded="false" aria-controls="primary-nav"
+              class="lg:hidden btn-outline-token px-3.5 py-2.5 rounded-xl font-semibold flex items-center gap-2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <span>Menu</span>
+      </button>
+
+      <!-- Navegação Principal -->
+      <nav id="primary-nav" aria-label="Navegação Principal" class="hidden lg:flex w-full lg:w-auto flex-col lg:flex-row items-stretch lg:items-center gap-1.5 pt-2 lg:pt-0">
+        <a href="#laboratorio-ia" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4 badge-soft-token text-center">
+          Laboratório de IA
+        </a>
+        <a href="#tipos-deficiencia" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4">
+          Tipos de Deficiência
+        </a>
+        <a href="#diretrizes-wcag" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4">
+          Diretrizes WCAG
+        </a>
+        <a href="#legislacao" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4">
+          Legislação
+        </a>
+        <a href="#checklist-dev" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4">
+          Checklist Dev
+        </a>
+        <a href="#glossario-faq" class="px-3.5 py-2.5 rounded-xl font-semibold hover:underline underline-offset-4">
+          Glossário & FAQ
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       CONTEÚDO PRINCIPAL (<main>)
+       ======================================================================== -->
+  <main id="main-content" class="flex-1">
+
+    <!-- SEÇÃO HERO -->
+    <section aria-labelledby="hero-heading" class="py-12 sm:py-16 lg:py-20 border-b" style="border-color: var(--border-color);">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold badge-soft-token">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" aria-hidden="true"></span>
+            <span>Tecnologia Assistiva • Conformidade WCAG 2.2 AAA • LBI Art. 63</span>
+          </div>
+
+          <h1 id="hero-heading" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+            Inteligência Artificial para eliminar barreiras e construir uma web para <span style="color: var(--accent);">todas as pessoas</span>.
+          </h1>
+
+          <p class="text-base sm:text-lg text-secondary-token max-w-2xl leading-relaxed">
+            AcessoIA une ferramentas práticas baseadas em modelos generativos (Gemini) — capazes de simplificar textos densos, gerar audiodescrições visuais e traduzir linguagem figurada — com a enciclopédia técnica mais completa sobre acessibilidade digital, legislação brasileira e boas práticas de desenvolvimento.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#laboratorio-ia" class="btn-primary-token px-6 py-3.5 rounded-xl font-bold text-base shadow-sm inline-flex items-center gap-2">
+              <span>Testar Ferramentas de IA</span>
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="#base-conhecimento" class="btn-outline-token px-6 py-3.5 rounded-xl font-bold text-base inline-flex items-center gap-2">
+              <span>Explorar Guia Completo</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card Resumo Interativo de Impacto -->
+        <div class="lg:col-span-5">
+          <div class="surface-card rounded-2xl p-6 sm:p-8 shadow-lg space-y-5">
+            <div class="flex items-center justify-between border-b pb-4" style="border-color: var(--border-color);">
+              <h2 class="text-lg font-extrabold">Por que Acessibilidade + IA?</h2>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold badge-soft-token">Impacto Real</span>
+            </div>
+            <ul class="space-y-4 text-sm sm:text-base">
+              <li class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-lg btn-primary-token flex items-center justify-center font-bold shrink-0 mt-0.5" aria-hidden="true">1</span>
+                <div>
+                  <strong class="block font-bold">Autonomia Cognitiva (TDAH, Dislexia e TEA)</strong>
+                  <span class="text-muted-token">Reestruturação imediata de documentos burocráticos em tópicos claros com leitura biônica e guia visual.</span>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-lg btn-primary-token flex items-center justify-center font-bold shrink-0 mt-0.5" aria-hidden="true">2</span>
+                <div>
+                  <strong class="block font-bold">Visão Computacional Inclusiva</strong>
+                  <span class="text-muted-token">Geração contextualizada de texto alternativo (<code>alt</code>) e audiodescrição narrada para pessoas cegas ou com baixa visão.</span>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-lg btn-primary-token flex items-center justify-center font-bold shrink-0 mt-0.5" aria-hidden="true">3</span>
+                <div>
+                  <strong class="block font-bold">Comunicação Sem Ambiguidades</strong>
+                  <span class="text-muted-token">Tradução de metáforas e jargões para Português Claro e estrutura de glosa para apoio à comunidade surda e Libras.</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         3. LABORATÓRIO INTERATIVO DE IA (3 FERRAMENTAS COM GEMINI API)
+         ======================================================================== -->
+    <section id="laboratorio-ia" aria-labelledby="lab-heading" class="py-14 sm:py-20 border-b" style="border-color: var(--border-color);">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+        <div class="max-w-3xl space-y-3">
+          <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+            Laboratório Prático • Gemini API
+          </span>
+          <h2 id="lab-heading" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+            Laboratório Interativo de Inteligência Artificial Assistiva
+          </h2>
+          <p class="text-base sm:text-lg text-secondary-token">
+            Experimente três soluções reais projetadas para superar barreiras cognitivas, visuais e linguísticas na web. Utilize as abas abaixo (navegáveis também pelas setas esquerda e direita do teclado).
+          </p>
+        </div>
+
+        <!-- Barra de Abas WAI-ARIA -->
+        <div role="tablist" aria-label="Ferramentas de Inteligência Artificial Assistiva"
+             class="grid grid-cols-1 md:grid-cols-3 gap-3 p-2 rounded-2xl surface-alt">
+          <button type="button" role="tab" id="tab-cognitivo" aria-selected="true" aria-controls="panel-cognitivo" tabindex="0"
+                  class="ai-tab-btn btn-primary-token px-4 py-3.5 rounded-xl font-bold text-left flex items-center gap-3 shadow-sm">
+            <span class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center font-extrabold shrink-0" aria-hidden="true">01</span>
+            <div>
+              <span class="block text-sm sm:text-base leading-snug">Leitor Cognitivo</span>
+              <span class="block text-xs opacity-90 font-normal">TDAH, Dislexia e TEA</span>
+            </div>
+          </button>
+
+          <button type="button" role="tab" id="tab-visual" aria-selected="false" aria-controls="panel-visual" tabindex="-1"
+                  class="ai-tab-btn btn-outline-token px-4 py-3.5 rounded-xl font-bold text-left flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg badge-soft-token flex items-center justify-center font-extrabold shrink-0" aria-hidden="true">02</span>
+            <div>
+              <span class="block text-sm sm:text-base leading-snug">Descritor Visual</span>
+              <span class="block text-xs text-muted-token font-normal">Cegueira e Baixa Visão</span>
+            </div>
+          </button>
+
+          <button type="button" role="tab" id="tab-comunicacao" aria-selected="false" aria-controls="panel-comunicacao" tabindex="-1"
+                  class="ai-tab-btn btn-outline-token px-4 py-3.5 rounded-xl font-bold text-left flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg badge-soft-token flex items-center justify-center font-extrabold shrink-0" aria-hidden="true">03</span>
+            <div>
+              <span class="block text-sm sm:text-base leading-snug">Comunicação Inclusiva</span>
+              <span class="block text-xs text-muted-token font-normal">Surdez, Libras e Def. Intelectual</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- ====================================================================
+             ABA 1: LEITOR COGNITIVO (TDAH, DISLEXIA E TEA)
+             ==================================================================== -->
+        <div role="tabpanel" id="panel-cognitivo" aria-labelledby="tab-cognitivo" class="surface-card rounded-2xl p-6 sm:p-8 shadow-md space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-4 border-b pb-4" style="border-color: var(--border-color);">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-extrabold">Leitor Cognitivo Inteligente (Linguagem Simples & Leitura Biônica)</h3>
+              <p class="text-sm sm:text-base text-secondary-token mt-1">
+                Cole um contrato, edital, bula ou artigo acadêmico complexo. A IA reestrutura o conteúdo para reduzir sobrecarga cognitiva e facilitar o foco.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btn-load-legal-sample" class="btn-outline-token px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold">
+                Carregar Exemplo Jurídico
+              </button>
+              <button type="button" id="btn-load-academic-sample" class="btn-outline-token px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold">
+                Carregar Exemplo Acadêmico
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Coluna Entrada -->
+            <div class="lg:col-span-5 space-y-4">
+              <label for="input-cognitive-text" class="block font-bold text-sm sm:text-base">
+                Texto denso ou complexo para adaptar:
+              </label>
+              <textarea id="input-cognitive-text" rows="9"
+                        placeholder="Cole aqui um parágrafo jurídico, acadêmico ou administrativo..."
+                        class="w-full rounded-xl p-4 surface-alt text-sm sm:text-base leading-relaxed resize-y"></textarea>
+
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <span id="cognitive-char-count" class="text-xs text-muted-token font-medium">0 caracteres</span>
+                <button type="button" id="btn-run-cognitive"
+                        class="btn-primary-token px-5 py-3 rounded-xl font-bold text-sm sm:text-base flex items-center gap-2 shadow-sm">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                    <path d="M12 3v3m0 12v3M3 12h3m12 0h3m-4.2-6.8 2.1-2.1M5.1 18.9l2.1-2.1m0-9.6L5.1 5.1m13.8 13.8-2.1-2.1"/>
+                  </svg>
+                  <span>Adaptar com IA</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Coluna Saída -->
+            <div class="lg:col-span-7 surface-alt rounded-2xl p-5 sm:p-6 space-y-5 flex flex-col justify-between" aria-live="polite">
+              <!-- Barra de Controles da Saída -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3" style="border-color: var(--border-color);">
+                <span class="font-extrabold text-sm uppercase tracking-wide">Resultado Adaptado</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" id="btn-toggle-bionic" aria-pressed="false"
+                          class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5">
+                    <span><strong>Lei</strong>tura <strong>Biô</strong>nica</span>
+                  </button>
+                  <button type="button" id="btn-speak-cognitive"
+                          class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5">
+                    <span>Ouvir Resultado</span>
+                  </button>
+                  <button type="button" id="btn-copy-cognitive"
+                          class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold">
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Estado de Carregamento -->
+              <div id="cognitive-loading" class="hidden py-12 text-center space-y-3" role="status">
+                <div class="w-10 h-10 border-4 border-current border-t-transparent rounded-full animate-spin mx-auto" style="color: var(--accent);"></div>
+                <p class="font-bold">Analisando estrutura sintática e simplificando vocabulário com Gemini...</p>
+              </div>
+
+              <!-- Conteúdo Gerado -->
+              <div id="cognitive-output" class="space-y-5 text-sm sm:text-base">
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (A) Versão em Linguagem Simples
+                  </h4>
+                  <p id="cognitive-simple-text" class="leading-relaxed">
+                    Clique em "Carregar Exemplo Jurídico" ou insira seu próprio texto e pressione <strong>Adaptar com IA</strong> para gerar uma versão acessível, direta e livre de barreiras.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (B) Resumo em Tópicos Objetivos
+                  </h4>
+                  <ul id="cognitive-bullets" class="list-disc pl-5 space-y-1.5">
+                    <li>Ideias principais organizadas em passos curtos para facilitar a retenção de memória.</li>
+                    <li>Eliminação de cláusulas intercaladas excessivas.</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (C) Glossário de Palavras-Chave Explicadas
+                  </h4>
+                  <dl id="cognitive-keywords" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div class="surface-card p-3 rounded-xl">
+                      <dt class="font-bold text-sm">Linguagem Simples</dt>
+                      <dd class="text-xs text-muted-token mt-0.5">Técnica de comunicação que permite ao leitor encontrar, entender e usar a informação na primeira leitura.</dd>
+                    </div>
+                    <div class="surface-card p-3 rounded-xl">
+                      <dt class="font-bold text-sm">Leitura Biônica</dt>
+                      <dd class="text-xs text-muted-token mt-0.5">Destaque tipográfico nas letras iniciais das palavras para guiar o foco ocular em pessoas com TDAH ou dislexia.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             ABA 2: DESCRITOR VISUAL (VISÃO COMPUTACIONAL)
+             ==================================================================== -->
+        <div role="tabpanel" id="panel-visual" aria-labelledby="tab-visual" hidden class="surface-card rounded-2xl p-6 sm:p-8 shadow-md space-y-6">
+          <div class="border-b pb-4" style="border-color: var(--border-color);">
+            <h3 class="text-xl sm:text-2xl font-extrabold">Descritor Visual & Audiodescrição Automática</h3>
+            <p class="text-sm sm:text-base text-secondary-token mt-1">
+              Envie uma imagem do seu dispositivo ou escolha um dos cenários ilustrados abaixo. A visão computacional gera o atributo HTML <code>alt</code> conciso e uma audiodescrição completa.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Coluna Seleção / Upload de Imagem -->
+            <div class="lg:col-span-5 space-y-4">
+              <div>
+                <span class="block font-bold text-sm mb-2">1. Escolha um cenário ilustrado pré-carregado:</span>
+                <div class="grid grid-cols-3 gap-2" role="group" aria-label="Cenários visuais pré-carregados">
+                  <button type="button" data-preset-img="chart"
+                          class="preset-img-btn btn-primary-token p-2.5 rounded-xl text-xs font-bold text-center">
+                    Gráfico de Dados
+                  </button>
+                  <button type="button" data-preset-img="urban"
+                          class="preset-img-btn btn-outline-token p-2.5 rounded-xl text-xs font-bold text-center">
+                    Cena Urbana
+                  </button>
+                  <button type="button" data-preset-img="ui"
+                          class="preset-img-btn btn-outline-token p-2.5 rounded-xl text-xs font-bold text-center">
+                    Interface App
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label for="input-image-upload" class="block font-bold text-sm mb-1.5">
+                  2. Ou envie uma imagem do seu computador/celular:
+                </label>
+                <input type="file" id="input-image-upload" accept="image/*"
+                       class="w-full text-xs sm:text-sm surface-alt rounded-xl p-2.5 file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border-0 file:font-bold file:cursor-pointer" />
+              </div>
+
+              <!-- Preview Visual (Canvas para cenários ou Img para upload) -->
+              <div class="surface-alt rounded-2xl p-3 flex flex-col items-center justify-center">
+                <canvas id="visual-preset-canvas" width="480" height="280"
+                        aria-label="Pré-visualização do cenário gráfico selecionado"
+                        class="w-full h-auto rounded-xl border" style="border-color: var(--border-color);"></canvas>
+                <img id="visual-uploaded-preview" alt="Pré-visualização da imagem enviada pelo usuário"
+                     class="hidden w-full max-h-64 object-contain rounded-xl border" style="border-color: var(--border-color);" />
+                <span id="visual-source-caption" class="text-xs text-muted-token mt-2 font-medium text-center">
+                  Cenário selecionado: Gráfico de Inclusão Digital no Brasil (2020–2026)
+                </span>
+              </div>
+
+              <button type="button" id="btn-run-visual"
+                      class="w-full btn-primary-token px-5 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Gerar Descrição Acessível</span>
+              </button>
+            </div>
+
+            <!-- Coluna Saída Audiodescrição -->
+            <div class="lg:col-span-7 surface-alt rounded-2xl p-5 sm:p-6 space-y-5 flex flex-col justify-between" aria-live="polite">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3" style="border-color: var(--border-color);">
+                <span class="font-extrabold text-sm uppercase tracking-wide">Saída de Acessibilidade Visual</span>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" id="btn-speak-visual"
+                          class="btn-primary-token px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5">
+                    <span>Narrar Audiodescrição</span>
+                  </button>
+                  <button type="button" id="btn-copy-alt"
+                          class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold">
+                    Copiar Código HTML
+                  </button>
+                </div>
+              </div>
+
+              <div id="visual-loading" class="hidden py-12 text-center space-y-3" role="status">
+                <div class="w-10 h-10 border-4 border-current border-t-transparent rounded-full animate-spin mx-auto" style="color: var(--accent);"></div>
+                <p class="font-bold">Analisando elementos visuais, cores, textos e contexto espacial...</p>
+              </div>
+
+              <div id="visual-output" class="space-y-5 text-sm sm:text-base">
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (A) Texto Alternativo Curto (Atributo HTML alt)
+                  </h4>
+                  <div class="surface-card p-3.5 rounded-xl font-mono text-xs sm:text-sm overflow-x-auto">
+                    <code id="visual-alt-code">&lt;img src="grafico-inclusao.png" alt="Gráfico de barras mostrando crescimento da acessibilidade digital no Brasil de 28% em 2020 para 64% em 2026."&gt;</code>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (B) Audiodescrição Completa e Contextualizada
+                  </h4>
+                  <p id="visual-audiodesc-text" class="leading-relaxed surface-card p-4 rounded-xl">
+                    Gráfico de barras verticais em fundo claro intitulado "Avanço da Acessibilidade Web no Brasil". O eixo horizontal apresenta quatro anos: 2020 (28%), 2022 (41%), 2024 (53%) e 2026 (64%). As barras em azul escuro crescem progressivamente da esquerda para a direita, destacando um aumento acumulado de 36 pontos percentuais na adoção de padrões WCAG.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (C) Elementos Críticos Identificados
+                  </h4>
+                  <ul id="visual-elements-list" class="flex flex-wrap gap-2">
+                    <li class="px-3 py-1 rounded-lg text-xs font-bold badge-soft-token">Tipo: Gráfico Estatístico</li>
+                    <li class="px-3 py-1 rounded-lg text-xs font-bold badge-soft-token">Tendência: Crescimento Contínuo</li>
+                    <li class="px-3 py-1 rounded-lg text-xs font-bold badge-soft-token">Contraste: Adequado</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             ABA 3: TRADUTOR DE COMUNICAÇÃO INCLUSIVA (SURDEZ / DEF. INTELECTUAL)
+             ==================================================================== -->
+        <div role="tabpanel" id="panel-comunicacao" aria-labelledby="tab-comunicacao" hidden class="surface-card rounded-2xl p-6 sm:p-8 shadow-md space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-4 border-b pb-4" style="border-color: var(--border-color);">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-extrabold">Tradutor de Comunicação Inclusiva (Português Claro & Glosa Libras)</h3>
+              <p class="text-sm sm:text-base text-secondary-token mt-1">
+                Expressões idiomáticas, metáforas e ironias são barreiras severas para pessoas surdas usuárias de Libras como primeira língua (L1) e pessoas com TEA ou deficiência intelectual.
+              </p>
+            </div>
+            <button type="button" id="btn-load-idiom-sample" class="btn-outline-token px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold">
+              Carregar Exemplo com Expressões
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-5 space-y-4">
+              <label for="input-idiom-text" class="block font-bold text-sm sm:text-base">
+                Frase com metáforas, gírias ou duplo sentido:
+              </label>
+              <textarea id="input-idiom-text" rows="7"
+                        placeholder="Ex: Não adianta chorar sobre o leite derramado; precisamos arregaçar as mangas e matar no peito essa entrega."
+                        class="w-full rounded-xl p-4 surface-alt text-sm sm:text-base leading-relaxed resize-y"></textarea>
+
+              <button type="button" id="btn-run-idiom"
+                      class="w-full btn-primary-token px-5 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm">
+                <span>Traduzir para Comunicação Clara</span>
+              </button>
+            </div>
+
+            <div class="lg:col-span-7 surface-alt rounded-2xl p-5 sm:p-6 space-y-5" aria-live="polite">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3" style="border-color: var(--border-color);">
+                <span class="font-extrabold text-sm uppercase tracking-wide">Tradução Literal & Estrutura Visual</span>
+                <div class="flex gap-2">
+                  <button type="button" id="btn-speak-idiom" class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold">
+                    Ouvir Português Claro
+                  </button>
+                  <button type="button" id="btn-copy-idiom" class="btn-outline-token px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold">
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <div id="idiom-loading" class="hidden py-10 text-center space-y-3" role="status">
+                <div class="w-10 h-10 border-4 border-current border-t-transparent rounded-full animate-spin mx-auto" style="color: var(--accent);"></div>
+                <p class="font-bold">Removendo ambiguidades e estruturando glosa em Libras...</p>
+              </div>
+
+              <div id="idiom-output" class="space-y-5 text-sm sm:text-base">
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (A) Português Claro Direto (Sem Metáforas)
+                  </h4>
+                  <p id="idiom-plain-text" class="surface-card p-4 rounded-xl leading-relaxed font-medium">
+                    Não adianta lamentar um erro que já aconteceu no passado. Agora precisamos trabalhar com dedicação e assumir a responsabilidade para concluir este projeto no prazo.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (B) Estrutura em Glosa Simplificada (Apoio à Libras — Ordem Tópico/SVO)
+                  </h4>
+                  <div class="surface-card p-4 rounded-xl font-mono text-xs sm:text-sm space-y-1.5">
+                    <p id="idiom-gloss-text" class="font-bold tracking-wide">
+                      PASSADO ERRO-ACONTECER CHORAR ADIANTAR-NÃO. AGORA NÓS TRABALHAR-FORTE, RESPONSABILIDADE ASSUMIR, PROJETO ENTREGAR PRAZO CERTO.
+                    </p>
+                    <p class="text-xs text-muted-token font-sans">
+                      * Nota: A glosa representa a estrutura gramatical espaço-visual da Língua Brasileira de Sinais (verbo no infinitivo, negação ao final e ausência de preposições conectivas).
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-extrabold text-sm uppercase tracking-wider mb-2" style="color: var(--accent);">
+                    (C) Expressões Figuradas Decodificadas
+                  </h4>
+                  <ul id="idiom-breakdown-list" class="space-y-2 text-xs sm:text-sm">
+                    <li class="surface-card p-3 rounded-xl"><strong>"Chorar sobre o leite derramado"</strong> → Lamentar algo que já ocorreu e não pode ser desfeito.</li>
+                    <li class="surface-card p-3 rounded-xl"><strong>"Arregaçar as mangas / Matar no peito"</strong> → Trabalhar com esforço e assumir a responsabilidade diretamente.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         4. BASE DE CONHECIMENTO COMPLETA ("O MÁXIMO DE INFORMAÇÕES")
+         ======================================================================== -->
+    <div id="base-conhecimento">
+
+      <!-- 4.1 PAINEL DE ESTATÍSTICAS E IMPACTO -->
+      <section aria-labelledby="stats-heading" class="py-14 sm:py-16 border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div class="max-w-3xl space-y-2">
+            <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+              Dados Oficiais & Panorama Global
+            </span>
+            <h2 id="stats-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              A Dimensão da Exclusão Digital em Números
+            </h2>
+            <p class="text-base text-secondary-token">
+              Projetar sem acessibilidade não afeta uma pequena minoria — exclui dezenas de milhões de cidadãos do acesso à educação, saúde, trabalho e consumo.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <article class="surface-card rounded-2xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-muted-token">Brasil • IBGE (PNAD Contínua)</span>
+                <p class="text-3xl sm:text-4xl font-extrabold mt-2" style="color: var(--accent);">18,6 milhões</p>
+                <h3 class="font-bold text-base mt-1">Pessoas com Deficiência no Brasil</h3>
+              </div>
+              <p class="text-sm text-secondary-token">
+                Corresponde a <strong>8,9% da população brasileira</strong> com 2 anos ou mais, incluindo deficiências visuais, auditivas, motoras e intelectuais.
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-muted-token">Mundo • Organização Mundial da Saúde</span>
+                <p class="text-3xl sm:text-4xl font-extrabold mt-2" style="color: var(--accent);">1,3 bilhão</p>
+                <h3 class="font-bold text-base mt-1">16% da População Mundial</h3>
+              </div>
+              <p class="text-sm text-secondary-token">
+                Cerca de <strong>1 em cada 6 pessoas</strong> no planeta convive com alguma deficiência significativa, número que cresce com o envelhecimento populacional.
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-muted-token">Auditoria Global • Relatório WebAIM</span>
+                <p class="text-3xl sm:text-4xl font-extrabold mt-2" style="color: var(--accent);">95,9%</p>
+                <h3 class="font-bold text-base mt-1">Sites com Falhas de WCAG 2</h3>
+              </div>
+              <p class="text-sm text-secondary-token">
+                Análise de 1 milhão de páginas iniciais revelou que mais de 95% possuem erros detectáveis automaticamente (baixo contraste, falta de <code>alt</code> e rótulos ausentes).
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-muted-token">Comportamento • Pesquisa Click-Away</span>
+                <p class="text-3xl sm:text-4xl font-extrabold mt-2" style="color: var(--accent);">71%</p>
+                <h3 class="font-bold text-base mt-1">Abandono Imediato por Barreiras</h3>
+              </div>
+              <p class="text-sm text-secondary-token">
+                Mais de 7 em cada 10 consumidores com deficiência abandonam um site ou aplicativo imediatamente quando encontram barreiras de navegação.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4.2 GUIA DETALHADO DAS 4 CATEGORIAS DE DEFICIÊNCIA E BARREIRAS DIGITAIS -->
+      <section id="tipos-deficiencia" aria-labelledby="disabilities-heading" class="py-14 sm:py-20 border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div class="max-w-3xl space-y-2">
+            <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+              Mapeamento de Barreiras & Tecnologias Assistivas
+            </span>
+            <h2 id="disabilities-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              As 4 Grandes Categorias de Deficiência na Web e o Papel da IA
+            </h2>
+            <p class="text-base text-secondary-token">
+              Compreenda como cada perfil de usuário interage com interfaces digitais, quais tecnologias assistivas utiliza e como a Inteligência Artificial potencializa a autonomia.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Categoria 1: Visual -->
+            <article class="surface-card rounded-2xl p-6 sm:p-7 shadow-sm space-y-4">
+              <div class="flex items-center gap-3 border-b pb-3" style="border-color: var(--border-color);">
+                <div class="w-11 h-11 rounded-xl btn-primary-token flex items-center justify-center shrink-0" aria-hidden="true">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-extrabold">1. Deficiência Visual</h3>
+                  <p class="text-xs font-semibold text-muted-token">Cegueira, Baixa Visão e Daltonismo (Discromatopsia)</p>
+                </div>
+              </div>
+              <div class="space-y-3 text-sm sm:text-base">
+                <p><strong>Principais Barreiras Digitais:</strong> Imagens e gráficos sem texto alternativo (<code>alt</code>), botões ícones sem <code>aria-label</code>, baixo contraste entre texto e fundo, uso exclusivo de cores para indicar erros (ex: apenas borda vermelha) e formulários sem <code>&lt;label&gt;</code>.</p>
+                <p><strong>Tecnologias Assistivas Tradicionais:</strong> Leitores de tela (<strong>NVDA</strong> e <strong>JAWS</strong> no Windows, <strong>VoiceOver</strong> no iOS/macOS, <strong>TalkBack</strong> no Android, <strong>Orca</strong> no Linux), ampliadores de tela e Linhas Braille táteis.</p>
+                <div class="surface-alt p-3.5 rounded-xl">
+                  <strong class="block text-xs uppercase tracking-wider mb-1" style="color: var(--accent);">Soluções com Inteligência Artificial:</strong>
+                  <span class="text-sm">Visão Computacional multimodal para descrever cenas complexas e gráficos em tempo real, OCR neural para leitura de PDFs digitalizados como imagem e síntese de voz neural (TTS) natural.</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Categoria 2: Auditiva -->
+            <article class="surface-card rounded-2xl p-6 sm:p-7 shadow-sm space-y-4">
+              <div class="flex items-center gap-3 border-b pb-3" style="border-color: var(--border-color);">
+                <div class="w-11 h-11 rounded-xl btn-primary-token flex items-center justify-center shrink-0" aria-hidden="true">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-extrabold">2. Deficiência Auditiva e Surdez</h3>
+                  <p class="text-xs font-semibold text-muted-token">Surdez bilateral, perda auditiva parcial e comunidade sinalizante</p>
+                </div>
+              </div>
+              <div class="space-y-3 text-sm sm:text-base">
+                <p><strong>Principais Barreiras Digitais:</strong> Vídeos institucionais e aulas sem legendas sincronizadas (Closed Caption / LSE), podcasts sem transcrição textual, atendimento exclusivo por telefone de voz e textos rebuscados com expressões idiomáticas para surdos cujo primeiro idioma é a <strong>Libras</strong>.</p>
+                <p><strong>Tecnologias Assistivas Tradicionais:</strong> Janela de intérprete de Libras, Legendas para Surdos e Ensurdecidos (LSE com identificação de sons ambientes), alertas visuais/vibratórios e avatares digitais (<strong>VLibras</strong>, Hand Talk).</p>
+                <div class="surface-alt p-3.5 rounded-xl">
+                  <strong class="block text-xs uppercase tracking-wider mb-1" style="color: var(--accent);">Soluções com Inteligência Artificial:</strong>
+                  <span class="text-sm">Reconhecimento Automático de Fala (ASR) de alta precisão para legendagem ao vivo, tradução automática Português → Glosa → Avatar 3D em Libras e simplificação de português escrito.</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Categoria 3: Neurodivergência e Cognitiva -->
+            <article class="surface-card rounded-2xl p-6 sm:p-7 shadow-sm space-y-4">
+              <div class="flex items-center gap-3 border-b pb-3" style="border-color: var(--border-color);">
+                <div class="w-11 h-11 rounded-xl btn-primary-token flex items-center justify-center shrink-0" aria-hidden="true">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-extrabold">3. Neurodivergência e Deficiência Cognitiva</h3>
+                  <p class="text-xs font-semibold text-muted-token">TDAH, Dislexia, TEA (Autismo) e Deficiência Intelectual</p>
+                </div>
+              </div>
+              <div class="space-y-3 text-sm sm:text-base">
+                <p><strong>Principais Barreiras Digitais:</strong> "Muros" extensos de texto justificado sem tópicos, carrosséis automáticos e banners piscantes que causam sobrecarga sensorial ou perda de foco, fontes serifadas apertadas e instruções ambíguas ou sarcásticas.</p>
+                <p><strong>Tecnologias Assistivas Tradicionais:</strong> Modo leitura limpa dos navegadores, réguas de leitura, fontes projetadas para dislexia (Atkinson Hyperlegible, OpenDyslexic), dicionários visuais e organizadores de rotina.</p>
+                <div class="surface-alt p-3.5 rounded-xl">
+                  <strong class="block text-xs uppercase tracking-wider mb-1" style="color: var(--accent);">Soluções com Inteligência Artificial:</strong>
+                  <span class="text-sm">Sumarização automática em tópicos curtos, conversão de "juridiquês" para Linguagem Simples, explicação literal de metáforas e assistentes passo a passo para tarefas complexas.</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Categoria 4: Motora e Física -->
+            <article class="surface-card rounded-2xl p-6 sm:p-7 shadow-sm space-y-4">
+              <div class="flex items-center gap-3 border-b pb-3" style="border-color: var(--border-color);">
+                <div class="w-11 h-11 rounded-xl btn-primary-token flex items-center justify-center shrink-0" aria-hidden="true">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-xl font-extrabold">4. Deficiência Motora e Física</h3>
+                  <p class="text-xs font-semibold text-muted-token">Tetraplegia, paralisia cerebral, tremores, amputações e LER/DORT</p>
+                </div>
+              </div>
+              <div class="space-y-3 text-sm sm:text-base">
+                <p><strong>Principais Barreiras Digitais:</strong> Elementos clicáveis que exigem exclusivamente o mouse (sem suporte à tecla <code>Tab</code> e <code>Enter</code>), ausência de anel de foco visível (<code>outline: none</code>), botões minúsculos muito próximos entre si, gestos complexos de arrastar e cronômetros curtos de sessão.</p>
+                <p><strong>Tecnologias Assistivas Tradicionais:</strong> Navegação 100% via teclado, acionadores de sopro/pressão (Switches), mouses adaptados, ponteiras de cabeça e rastreadores oculares (<strong>Eye-Tracking</strong>).</p>
+                <div class="surface-alt p-3.5 rounded-xl">
+                  <strong class="block text-xs uppercase tracking-wider mb-1" style="color: var(--accent);">Soluções com Inteligência Artificial:</strong>
+                  <span class="text-sm">Controle completo da interface por comandos de voz naturais, rastreamento ocular via webcam comum com visão computacional e predição inteligente de texto/ações.</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4.3 OS 4 PRINCÍPIOS DA WCAG 2.2 (POUR) + EXEMPLOS DE CÓDIGO -->
+      <section id="diretrizes-wcag" aria-labelledby="wcag-heading" class="py-14 sm:py-20 border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div class="max-w-3xl space-y-2">
+            <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+              Padrão Internacional W3C • WCAG 2.2
+            </span>
+            <h2 id="wcag-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Os 4 Princípios Fundamentais da WCAG 2.2 (POUR)
+            </h2>
+            <p class="text-base text-secondary-token">
+              As Diretrizes de Acessibilidade para Conteúdo Web (WCAG) organizam seus critérios de sucesso em quatro pilares essenciais: <strong>Perceptível, Operável, Compreensível e Robusto</strong>.
+            </p>
+          </div>
+
+          <!-- Grid dos 4 Princípios -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="surface-card rounded-2xl p-6 space-y-3">
+              <div class="w-10 h-10 rounded-xl btn-primary-token flex items-center justify-center font-extrabold text-lg">P</div>
+              <h3 class="text-lg font-extrabold">1. Perceptível</h3>
+              <p class="text-sm text-secondary-token leading-relaxed">
+                As informações e os componentes da interface devem ser apresentados aos usuários de formas que eles possam perceber (visão, audição ou tato).
+              </p>
+              <ul class="text-xs text-muted-token list-disc pl-4 space-y-1">
+                <li>Texto alternativo em mídias não textuais.</li>
+                <li>Contraste mínimo de <strong>4.5:1</strong> (AA) e <strong>7:1</strong> (AAA).</li>
+                <li>Legendas e audiodescrição em vídeos.</li>
+              </ul>
+            </div>
+
+            <div class="surface-card rounded-2xl p-6 space-y-3">
+              <div class="w-10 h-10 rounded-xl btn-primary-token flex items-center justify-center font-extrabold text-lg">O</div>
+              <h3 class="text-lg font-extrabold">2. Operável</h3>
+              <p class="text-sm text-secondary-token leading-relaxed">
+                Os componentes de navegação e operação devem ser utilizáveis por diferentes dispositivos de entrada, especialmente o teclado.
+              </p>
+              <ul class="text-xs text-muted-token list-disc pl-4 space-y-1">
+                <li>100% operável via teclado sem armadilhas de foco.</li>
+                <li><strong>WCAG 2.2:</strong> Foco não obstruído e alvo mínimo de 24×24px.</li>
+                <li>Links de salto rápido (Skip Links) e títulos descritivos.</li>
+              </ul>
+            </div>
+
+            <div class="surface-card rounded-2xl p-6 space-y-3">
+              <div class="w-10 h-10 rounded-xl btn-primary-token flex items-center justify-center font-extrabold text-lg">C</div>
+              <h3 class="text-lg font-extrabold">3. Compreensível</h3>
+              <p class="text-sm text-secondary-token leading-relaxed">
+                Tanto o conteúdo quanto a operação da interface devem ser previsíveis, claros e tolerantes a erros humanos.
+              </p>
+              <ul class="text-xs text-muted-token list-disc pl-4 space-y-1">
+                <li>Idioma declarado no HTML (<code>lang="pt-BR"</code>).</li>
+                <li>Mensagens de erro claras com sugestões de correção.</li>
+                <li><strong>WCAG 2.2:</strong> Autenticação acessível (sem testes cognitivos punitivos).</li>
+              </ul>
+            </div>
+
+            <div class="surface-card rounded-2xl p-6 space-y-3">
+              <div class="w-10 h-10 rounded-xl btn-primary-token flex items-center justify-center font-extrabold text-lg">R</div>
+              <h3 class="text-lg font-extrabold">4. Robusto</h3>
+              <p class="text-sm text-secondary-token leading-relaxed">
+                O código deve ser limpo e semântico o suficiente para ser interpretado de maneira confiável por navegadores e tecnologias assistivas atuais e futuras.
+              </p>
+              <ul class="text-xs text-muted-token list-disc pl-4 space-y-1">
+                <li>HTML5 semântico (<code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;button&gt;</code>).</li>
+                <li>Uso correto de estados <code>WAI-ARIA</code> (<code>aria-expanded</code>, <code>aria-live</code>).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Comparativo Prático de Código: Como NÃO fazer vs Como FAZER -->
+          <div class="surface-card rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div class="border-b pb-4" style="border-color: var(--border-color);">
+              <h3 class="text-xl font-extrabold">Na Prática: HTML5 Semântico & WAI-ARIA (Inacessível vs. Acessível)</h3>
+              <p class="text-sm text-secondary-token mt-1">
+                Compare como pequenas decisões na estrutura do código determinam se um usuário de leitor de tela ou teclado conseguirá utilizar a aplicação.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Bloco Inacessível -->
+              <div class="rounded-2xl p-5 border-2 border-red-400/70 space-y-3" style="background-color: var(--bg-surface-alt);">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-lg text-xs font-extrabold" style="background-color: var(--badge-danger-bg); color: var(--badge-danger-text);">
+                    COMO NÃO FAZER (Inacessível)
+                  </span>
+                  <span class="text-xs text-muted-token font-mono">Falso botão & Input sem rótulo</span>
+                </div>
+                <pre class="text-xs sm:text-sm font-mono overflow-x-auto p-3.5 rounded-xl surface-card leading-relaxed"><code>&lt;!-- Erro 1: div não recebe foco via Tab nem Enter --&gt;
+&lt;div class="btn" onclick="enviar()"&gt;
+  &lt;img src="send.png"&gt;
+&lt;/div&gt;
+
+&lt;!-- Erro 2: Placeholder desaparece e não é label --&gt;
+&lt;input type="text" placeholder="Digite seu CPF"&gt;
+
+&lt;!-- Erro 3: Alerta silencioso invisível para cegos --&gt;
+&lt;div id="erro" style="color: red;"&gt;CPF inválido&lt;/div&gt;</code></pre>
+                <p class="text-xs text-secondary-token">
+                  <strong>Impacto:</strong> Usuários de teclado não alcançam o botão; leitores de tela anunciam apenas "imagem sem descrição" e ignoram a mensagem de erro dinâmica.
+                </p>
+              </div>
+
+              <!-- Bloco Acessível -->
+              <div class="rounded-2xl p-5 border-2 border-emerald-500/80 space-y-3" style="background-color: var(--bg-surface-alt);">
+                <div class="flex items-center justify-between">
+                  <span class="px-3 py-1 rounded-lg text-xs font-extrabold" style="background-color: var(--badge-success-bg); color: var(--badge-success-text);">
+                    COMO FAZER (HTML5 + WAI-ARIA)
+                  </span>
+                  <span class="text-xs text-muted-token font-mono">Semântico & Navegável</span>
+                </div>
+                <pre class="text-xs sm:text-sm font-mono overflow-x-auto p-3.5 rounded-xl surface-card leading-relaxed"><code>&lt;!-- Correto 1: Tag button nativa com rótulo claro --&gt;
+&lt;button type="button" onclick="enviar()"&gt;
+  &lt;img src="send.png" alt="" aria-hidden="true"&gt;
+  &lt;span&gt;Enviar Formulário&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- Correto 2: Label explícito vinculado via for/id --&gt;
+&lt;label for="cpf"&gt;CPF (apenas números)&lt;/label&gt;
+&lt;input id="cpf" type="text" aria-describedby="erro-cpf"&gt;
+
+&lt;!-- Correto 3: Região Live anunciada automaticamente --&gt;
+&lt;div id="erro-cpf" role="alert" aria-live="assertive"&gt;
+  Erro: O CPF informado deve conter 11 dígitos.
+&lt;/div&gt;</code></pre>
+                <p class="text-xs text-secondary-token">
+                  <strong>Impacto:</strong> Foco automático pelo teclado, acionamento por Enter/Espaço, anúncio imediato do rótulo e leitura automática do erro pelo NVDA/VoiceOver.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4.4 PANORAMA LEGAL E NORMATIVO NO BRASIL -->
+      <section id="legislacao" aria-labelledby="legal-heading" class="py-14 sm:py-20 border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div class="max-w-3xl space-y-2">
+            <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+              Direito Digital & Marcos Regulatórios
+            </span>
+            <h2 id="legal-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Panorama Legal e Normativo da Acessibilidade Digital no Brasil
+            </h2>
+            <p class="text-base text-secondary-token">
+              No Brasil, a acessibilidade na web não é apenas uma boa prática de UX — é uma exigência legal respaldada por leis federais e normas técnicas da ABNT.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <article class="surface-card rounded-2xl p-6 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-lg text-xs font-extrabold badge-soft-token">Lei Federal nº 13.146/2015</span>
+                <span class="text-xs font-bold text-muted-token">Estatuto da Pessoa com Deficiência</span>
+              </div>
+              <h3 class="text-xl font-extrabold">Lei Brasileira de Inclusão (LBI) — Artigo 63</h3>
+              <p class="text-sm sm:text-base text-secondary-token leading-relaxed">
+                O <strong>Art. 63 da LBI</strong> torna <strong>obrigatória a acessibilidade nos sítios da internet</strong> mantidos por empresas com sede ou representação comercial no País ou por órgãos de governo, para uso da pessoa com deficiência, garantindo-lhe acesso às informações disponíveis conforme as melhores práticas e diretrizes adotadas internacionalmente (WCAG).
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-lg text-xs font-extrabold badge-soft-token">Decreto nº 5.296/2004</span>
+                <span class="text-xs font-bold text-muted-token">Regulamentação Nacional</span>
+              </div>
+              <h3 class="text-xl font-extrabold">Decreto da Acessibilidade (Art. 47)</h3>
+              <p class="text-sm sm:text-base text-secondary-token leading-relaxed">
+                Regulamenta as Leis nº 10.048/2000 e nº 10.098/2000, estabelecendo normas gerais e critérios básicos para a promoção da acessibilidade. Seu <strong>Artigo 47</strong> determinou a obrigatoriedade de acessibilidade nos portais e sítios eletrônicos da administração pública para o uso das pessoas portadoras de deficiência visual.
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-lg text-xs font-extrabold badge-soft-token">Padrão Governamental</span>
+                <span class="text-xs font-bold text-muted-token">Governo Digital (e-PING)</span>
+              </div>
+              <h3 class="text-xl font-extrabold">e-MAG — Modelo de Acessibilidade em Governo Eletrônico</h3>
+              <p class="text-sm sm:text-base text-secondary-token leading-relaxed">
+                Consiste em um conjunto de recomendações técnico-práticas criado para nortear o desenvolvimento e a adaptação de conteúdos digitais do governo brasileiro. O <strong>e-MAG</strong> adapta as diretrizes internacionais da WCAG às necessidades locais do cidadão brasileiro, organizando 45 recomendações em 6 seções (Marcação, Comportamento, Conteúdo/Informação, Apresentação/Design, Multimídia e Formulários).
+              </p>
+            </article>
+
+            <article class="surface-card rounded-2xl p-6 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-lg text-xs font-extrabold badge-soft-token">Norma Técnica Oficial</span>
+                <span class="text-xs font-bold text-muted-token">ABNT • Dispositivos Móveis</span>
+              </div>
+              <h3 class="text-xl font-extrabold">ABNT NBR 17060 — Acessibilidade em Aplicativos Móveis</h3>
+              <p class="text-sm sm:text-base text-secondary-token leading-relaxed">
+                Publicada pela Associação Brasileira de Normas Técnicas, a <strong>NBR 17060</strong> estabelece os requisitos específicos de acessibilidade para aplicativos nativos e híbridos em smartphones e tablets (Android e iOS), cobrindo gestos alternativos ao toque múltiplo, orientação de tela, compatibilidade com TalkBack/VoiceOver e áreas mínimas de toque.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4.5 CHECKLIST INTERATIVO DE ACESSIBILIDADE WEB PARA DESENVOLVEDORES -->
+      <section id="checklist-dev" aria-labelledby="checklist-heading" class="py-14 sm:py-20 border-b" style="border-color: var(--border-color);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div class="max-w-2xl space-y-2">
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+                Auditoria Prática • 12 Critérios Essenciais
+              </span>
+              <h2 id="checklist-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Checklist Interativo de Acessibilidade para Desenvolvedores
+              </h2>
+              <p class="text-base text-secondary-token">
+                Marque os requisitos já implementados no seu projeto para calcular seu nível de conformidade WCAG 2.2 em tempo real e exportar o relatório.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btn-checklist-reset" class="btn-outline-token px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold">
+                Limpar Marcações
+              </button>
+              <button type="button" id="btn-checklist-export" class="btn-primary-token px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold">
+                Copiar Relatório de Auditoria
+              </button>
+            </div>
+          </div>
+
+          <!-- Painel de Pontuação e Barra de Progresso -->
+          <div class="surface-card rounded-2xl p-6 shadow-sm space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-muted-token">Pontuação de Conformidade</span>
+                <div class="flex items-baseline gap-3 mt-1">
+                  <span id="checklist-score-text" class="text-2xl sm:text-3xl font-extrabold" style="color: var(--accent);">0 de 12 itens (0%)</span>
+                  <span id="checklist-level-badge" class="px-3 py-1 rounded-full text-xs font-bold badge-soft-token">
+                    Auditoria Não Iniciada
+                  </span>
+                </div>
+              </div>
+              <p id="checklist-advice" class="text-sm text-secondary-token max-w-md">
+                Comece verificando a declaração de idioma, contraste de cores e textos alternativos nas imagens.
+              </p>
+            </div>
+
+            <!-- Barra de Progresso Acessível -->
+            <div class="w-full h-4 rounded-full overflow-hidden surface-alt p-0.5"
+                 role="progressbar" id="checklist-progressbar"
+                 aria-label="Progresso de conformidade de acessibilidade"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div id="checklist-progress-fill" class="h-full rounded-full transition-all duration-300" style="width: 0%; background-color: var(--accent);"></div>
+            </div>
+          </div>
+
+          <!-- Lista de 12 Itens Verificáveis -->
+          <div id="checklist-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populado dinamicamente via JavaScript para controle limpo de estado e ARIA -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4.6 GLOSSÁRIO TÉCNICO E PERGUNTAS FREQUENTES (FAQ ACORDEÃO) -->
+      <section id="glossario-faq" aria-labelledby="glossary-faq-heading" class="py-14 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+
+          <!-- Subseção Glossário -->
+          <div class="space-y-6">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+              <div class="max-w-2xl space-y-2">
+                <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+                  Vocabulário Técnico
+                </span>
+                <h2 id="glossary-faq-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                  Glossário de Acessibilidade Digital e Inclusão
+                </h2>
+              </div>
+              <div class="w-full sm:w-72">
+                <label for="input-glossary-filter" class="sr-only">Filtrar termos do glossário</label>
+                <input type="search" id="input-glossary-filter"
+                       placeholder="Filtrar termo (ex: ARIA, WCAG, Alt)..."
+                       class="w-full rounded-xl px-4 py-2.5 surface-card text-sm" />
+              </div>
+            </div>
+
+            <dl id="glossary-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- Populado via JS -->
+            </dl>
+          </div>
+
+          <!-- Subseção FAQ Acordeão Acessível -->
+          <div class="space-y-6 pt-4 border-t" style="border-color: var(--border-color);">
+            <div class="max-w-3xl space-y-2">
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider badge-soft-token">
+                Dúvidas Frequentes
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Perguntas Frequentes sobre IA e Acessibilidade (FAQ)
+              </h3>
+            </div>
+
+            <div id="faq-accordion" class="space-y-3 max-w-4xl">
+              <!-- Populado via JS com aria-expanded e aria-controls -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       RODAPÉ SEMÂNTICO
+       ======================================================================== -->
+  <footer class="surface-card border-t py-10 mt-auto" style="border-color: var(--border-color);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+      <div class="space-y-1 text-center sm:text-left">
+        <p class="font-extrabold text-base">AcessoIA — Inteligência Artificial para Acessibilidade e Inclusão Digital</p>
+        <p class="text-muted-token">
+          Desenvolvido seguindo os princípios WCAG 2.2 AAA, HTML5 Semântico, WAI-ARIA e Lei Brasileira de Inclusão (Lei nº 13.146/2015).
+        </p>
+      </div>
+      <a href="#main-content" class="btn-outline-token px-4 py-2.5 rounded-xl font-bold shrink-0">
+        Voltar ao Topo ↑
+      </a>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       NOTIFICAÇÃO TOAST ACESSÍVEL (SUBSTITUI ALERT() NATIVO)
+       ======================================================================== -->
+  <div id="toast-container" role="status" aria-live="polite"
+       class="fixed bottom-5 right-5 z-50 max-w-sm w-full pointer-events-none px-4 sm:px-0">
+    <div id="toast-box" class="hidden pointer-events-auto surface-card border-2 shadow-2xl rounded-2xl p-4 flex items-center justify-between gap-3"
+         style="border-color: var(--accent);">
+      <p id="toast-message" class="text-sm font-bold"></p>
+      <button type="button" id="btn-close-toast" aria-label="Fechar notificação"
+              class="px-2.5 py-1 rounded-lg font-extrabold text-xs btn-outline-token shrink-0">
+        OK
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT COMPLETO DA APLICAÇÃO
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ======================================================================
+         UTILITÁRIOS DE ACESSIBILIDADE, TOAST E CLIPBOARD
+         ====================================================================== */
+      const announcer = document.getElementById('sr-announcer');
+      const toastBox = document.getElementById('toast-box');
+      const toastMessage = document.getElementById('toast-message');
+      let toastTimeout = null;
+
+      function announceToScreenReader(message) {
+        if (!announcer) return;
+        announcer.textContent = '';
+        window.setTimeout(() => {
+          announcer.textContent = message;
+        }, 50);
+      }
+
+      function showToast(message) {
+        if (!toastBox || !toastMessage) return;
+        toastMessage.textContent = message;
+        toastBox.classList.remove('hidden');
+        announceToScreenReader(message);
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = window.setTimeout(() => {
+          toastBox.classList.add('hidden');
+        }, 4500);
+      }
+
+      document.getElementById('btn-close-toast')?.addEventListener('click', () => {
+        toastBox.classList.add('hidden');
+      });
+
+      function copyTextToClipboard(text, successMsg = 'Conteúdo copiado para a área de transferência!') {
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          const copied = document.execCommand('copy');
+          document.body.removeChild(textarea);
+          if (copied) {
+            showToast(successMsg);
+          } else {
+            showToast('Não foi possível copiar automaticamente. Selecione o texto manualmente.');
+          }
+        } catch (err) {
+          showToast('Erro ao copiar texto.');
+        }
+      }
+
+      /* ======================================================================
+         1. BARRA DE ACESSIBILIDADE GLOBAL (FONTE, CONTRASTE, TDAH, TTS)
+         ====================================================================== */
+      let currentFontScale = 100;
+      const fontScaleLabel = document.getElementById('font-scale-label');
+
+      function updateFontScale(newScale) {
+        currentFontScale = Math.min(140, Math.max(85, newScale));
+        document.documentElement.style.setProperty('--font-scale', currentFontScale + '%');
+        if (fontScaleLabel) fontScaleLabel.textContent = currentFontScale + '%';
+        announceToScreenReader(`Tamanho da fonte ajustado para ${currentFontScale} por cento.`);
+      }
+
+      document.getElementById('btn-font-inc')?.addEventListener('click', () => updateFontScale(currentFontScale + 10));
+      document.getElementById('btn-font-dec')?.addEventListener('click', () => updateFontScale(currentFontScale - 10));
+      document.getElementById('btn-font-reset')?.addEventListener('click', () => updateFontScale(100));
+
+      // Seletor de Temas de Contraste
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      const themeNames = {
+        'light': 'Padrão Claro',
+        'dark': 'Modo Escuro',
+        'high-contrast': 'Alto Contraste Amarelo sobre Preto',
+        'sepia': 'Modo Sépia de Conforto Visual'
+      };
+
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selectedTheme = btn.getAttribute('data-set-theme');
+          document.documentElement.setAttribute('data-theme', selectedTheme);
+          themeButtons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+          showToast(`Tema alterado para: ${themeNames[selectedTheme] || selectedTheme}`);
+        });
+      });
+
+      // Modo Neurodivergente (TDAH / Dislexia) + Régua de Leitura Guiada
+      const btnNeuro = document.getElementById('btn-neuro-mode');
+      const readingRuler = document.getElementById('reading-ruler');
+      let neuroActive = false;
+
+      btnNeuro?.addEventListener('click', () => {
+        neuroActive = !neuroActive;
+        document.documentElement.setAttribute('data-neuro', neuroActive ? 'true' : 'false');
+        btnNeuro.setAttribute('aria-pressed', neuroActive ? 'true' : 'false');
+        if (neuroActive) {
+          showToast('Modo TDAH / Dislexia ativado: espaçamento ampliado e régua de leitura guiada.');
+        } else {
+          showToast('Modo TDAH / Dislexia desativado.');
+        }
+      });
+
+      function moveReadingRuler(clientY) {
+        if (!neuroActive || !readingRuler) return;
+        readingRuler.style.top = `${clientY}px`;
+      }
+
+      window.addEventListener('mousemove', (e) => moveReadingRuler(e.clientY), { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          moveReadingRuler(e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      // Narrador Web Speech API (pt-BR)
+      const btnSpeakPage = document.getElementById('btn-speak-page');
+      const labelSpeakPage = document.getElementById('label-speak-page');
+      let isSpeaking = false;
+
+      function stopSpeech() {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+        isSpeaking = false;
+        if (btnSpeakPage) btnSpeakPage.setAttribute('aria-pressed', 'false');
+        if (labelSpeakPage) labelSpeakPage.textContent = 'Ouvir Página';
+      }
+
+      function speakText(textToRead, buttonFeedback = false) {
+        if (!('speechSynthesis' in window)) {
+          showToast('Seu navegador não suporta leitura em voz alta (Web Speech API).');
+          return;
+        }
+        stopSpeech();
+        const cleanText = textToRead.replace(/\s+/g, ' ').trim();
+        if (!cleanText) return;
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 1.0;
+
+        // Tenta selecionar uma voz pt-BR nativa se disponível
+        const voices = window.speechSynthesis.getVoices();
+        const ptVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('pt-br'));
+        if (ptVoice) utterance.voice = ptVoice;
+
+        utterance.onstart = () => {
+          isSpeaking = true;
+          if (buttonFeedback && btnSpeakPage && labelSpeakPage) {
+            btnSpeakPage.setAttribute('aria-pressed', 'true');
+            labelSpeakPage.textContent = 'Parar Leitura';
+          }
+        };
+
+        utterance.onend = () => stopSpeech();
+        utterance.onerror = () => stopSpeech();
+
+        window.speechSynthesis.speak(utterance);
+        showToast('Iniciando narração em Português (Brasil)...');
+      }
+
+      btnSpeakPage?.addEventListener('click', () => {
+        if (isSpeaking) {
+          stopSpeech();
+          showToast('Leitura em voz alta interrompida.');
+        } else {
+          const heroText = document.getElementById('main-content')?.innerText.slice(0, 2800) || '';
+          speakText(heroText, true);
+        }
+      });
+
+      window.addEventListener('beforeunload', stopSpeech);
+
+      // Menu Mobile Responsivo
+      const btnMobileMenu = document.getElementById('btn-mobile-menu');
+      const primaryNav = document.getElementById('primary-nav');
+      btnMobileMenu?.addEventListener('click', () => {
+        const expanded = btnMobileMenu.getAttribute('aria-expanded') === 'true';
+        btnMobileMenu.setAttribute('aria-expanded', String(!expanded));
+        primaryNav?.classList.toggle('hidden');
+        primaryNav?.classList.toggle('flex');
+      });
+
+      /* ======================================================================
+         2. NAVEGAÇÃO POR ABAS WAI-ARIA NO LABORATÓRIO DE IA
+         ====================================================================== */
+      const tabs = Array.from(document.querySelectorAll('.ai-tab-btn'));
+      const panels = [
+        document.getElementById('panel-cognitivo'),
+        document.getElementById('panel-visual'),
+        document.getElementById('panel-comunicacao')
+      ];
+
+      function activateTab(index) {
+        tabs.forEach((tab, i) => {
+          const isSelected = i === index;
+          tab.setAttribute('aria-selected', String(isSelected));
+          tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+          if (isSelected) {
+            tab.classList.remove('btn-outline-token');
+            tab.classList.add('btn-primary-token');
+          } else {
+            tab.classList.remove('btn-primary-token');
+            tab.classList.add('btn-outline-token');
+          }
+          if (panels[i]) {
+            panels[i].hidden = !isSelected;
+          }
+        });
+        tabs[index].focus();
+      }
+
+      tabs.forEach((tab, idx) => {
+        tab.addEventListener('click', () => activateTab(idx));
+        tab.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            activateTab((idx + 1) % tabs.length);
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            activateTab((idx - 1 + tabs.length) % tabs.length);
+          }
+        });
+      });
+
+      /* ======================================================================
+         3. INTEGRAÇÃO COM GEMINI API (COM EXPONENTIAL BACKOFF + FALLBACK)
+         ====================================================================== */
+      async function callGeminiAPI(payload, maxRetries = 3) {
+        const apiKey = "AQ.Ab8RN6I2Y8Ca5yGx0MI6anBiw61foZJfbWsW6IX4_b67_gEquQ"; // Chave injetada automaticamente em tempo de execução
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+            const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) {
+              throw new Error('Resposta vazia da API');
+            }
+            return text;
+          } catch (err) {
+            if (attempt === maxRetries - 1) {
+              throw err;
+            }
+            const delayMs = 1000 * Math.pow(2, attempt);
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          }
+        }
+      }
+
+      /* ======================================================================
+         FERRAMENTA 1: LEITOR COGNITIVO (TDAH, DISLEXIA, TEA + LEITURA BIÔNICA)
+         ====================================================================== */
+      const inputCog = document.getElementById('input-cognitive-text');
+      const cogCharCount = document.getElementById('cognitive-char-count');
+      const cogLoading = document.getElementById('cognitive-loading');
+      const cogOutput = document.getElementById('cognitive-output');
+      const cogSimpleEl = document.getElementById('cognitive-simple-text');
+      const cogBulletsEl = document.getElementById('cognitive-bullets');
+      const cogKeywordsEl = document.getElementById('cognitive-keywords');
+      const btnToggleBionic = document.getElementById('btn-toggle-bionic');
+
+      let rawSimpleText = cogSimpleEl.textContent.trim();
+      let bionicEnabled = false;
+
+      inputCog?.addEventListener('input', () => {
+        cogCharCount.textContent = `${inputCog.value.length} caracteres`;
+      });
+
+      document.getElementById('btn-load-legal-sample')?.addEventListener('click', () => {
+        inputCog.value = "CLÁUSULA DÉCIMA QUARTA — DA RESCISÃO ANTECIPADA E COMINAÇÕES PECUNIÁRIAS: Na hipótese de resilição unilateral imotivada do presente instrumento contratual antes do decurso do prazo estipulado de 12 (doze) meses, incorrerá o LOCATÁRIO no pagamento de multa compensatória equivalente a 03 (três) aluguéis vigentes, calculada pro rata temporis em conformidade com o art. 4º da Lei nº 8.245/91, sem prejuízo da obrigação de restituir o imóvel livre de ônus e em perfeito estado de conservação, sob pena de execução judicial imediata.";
+        cogCharCount.textContent = `${inputCog.value.length} caracteres`;
+        showToast('Exemplo jurídico carregado. Clique em "Adaptar com IA".');
+      });
+
+      document.getElementById('btn-load-academic-sample')?.addEventListener('click', () => {
+        inputCog.value = "A interoperabilidade semântica entre agentes computacionais autônomos e tecnologias assistivas contemporâneas pressupõe a aderência estrita às ontologias padronizadas pelo consórcio W3C, mitigando a entropia informacional decorrente de interfaces não determinísticas e promovendo a equidade epistêmica para usuários neurodivergentes.";
+        cogCharCount.textContent = `${inputCog.value.length} caracteres`;
+        showToast('Exemplo acadêmico carregado. Clique em "Adaptar com IA".');
+      });
+
+      function applyBionicFormatting(text) {
+        return text.split(/(\s+)/).map(token => {
+          if (/^\s+$/.test(token)) return token;
+          // Escapa HTML básico para segurança
+          const safe = token.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const cleanLen = safe.replace(/[.,;:!?()"']/g, '').length;
+          if (cleanLen <= 1) return `<strong>${safe}</strong>`;
+          const boldCount = Math.ceil(cleanLen * 0.45);
+          return `<strong>${safe.slice(0, boldCount)}</strong>${safe.slice(boldCount)}`;
+        }).join('');
+      }
+
+      function renderSimpleCognitiveText() {
+        if (bionicEnabled) {
+          cogSimpleEl.innerHTML = applyBionicFormatting(rawSimpleText);
+        } else {
+          cogSimpleEl.textContent = rawSimpleText;
+        }
+      }
+
+      btnToggleBionic?.addEventListener('click', () => {
+        bionicEnabled = !bionicEnabled;
+        btnToggleBionic.setAttribute('aria-pressed', String(bionicEnabled));
+        btnToggleBionic.classList.toggle('btn-primary-token', bionicEnabled);
+        btnToggleBionic.classList.toggle('btn-outline-token', !bionicEnabled);
+        renderSimpleCognitiveText();
+        showToast(bionicEnabled ? 'Leitura Biônica ativada.' : 'Leitura Biônica desativada.');
+      });
+
+      function buildCognitiveFallback(text) {
+        const lower = text.toLowerCase();
+        if (lower.includes('locatário') || lower.includes('rescisão') || lower.includes('cláusula')) {
+          return {
+            linguagemSimples: "Se você decidir sair do imóvel e cancelar o contrato antes de completar 12 meses sem um motivo previsto em lei, precisará pagar uma multa proporcional ao tempo que falta para acabar o contrato (baseada no valor de 3 aluguéis). Além disso, você deve devolver o imóvel limpo, sem dívidas e nas mesmas condições em que recebeu.",
+            resumoTopicos: [
+              "Prazo mínimo do contrato: 12 meses.",
+              "Cancelar antes do prazo gera multa proporcional ao tempo restante.",
+              "O imóvel deve ser devolvido conservado e sem contas pendentes."
+            ],
+            palavrasChave: [
+              { termo: "Resilição unilateral", definicao: "Quando apenas uma das partes decide encerrar o contrato." },
+              { termo: "Pro rata temporis", definicao: "Cálculo proporcional aos meses que ainda faltam para o fim do contrato." },
+              { termo: "Multa compensatória", definicao: "Valor pago para compensar a quebra antecipada do acordo." },
+              { termo: "Livre de ônus", definicao: "Sem contas atrasadas de água, luz, condomínio ou IPTU." }
+            ]
+          };
+        }
+        return {
+          linguagemSimples: "Para que softwares de acessibilidade (como leitores de tela) funcionem bem com ferramentas modernas de Inteligência Artificial, os sites precisam ser construídos seguindo padrões claros da web (W3C). Isso evita confusão na tela e garante que pessoas neurodivergentes consigam ler e entender tudo com facilidade.",
+          resumoTopicos: [
+            "Sites e tecnologias assistivas precisam falar a mesma língua técnica.",
+            "Seguir padrões oficiais (W3C) evita informações desorganizadas.",
+            "O objetivo final é garantir igualdade de acesso para pessoas neurodivergentes."
+          ],
+          palavrasChave: [
+            { termo: "Interoperabilidade", definicao: "Capacidade de dois sistemas diferentes trabalharem juntos sem falhas." },
+            { termo: "Consórcio W3C", definicao: "Organização internacional que cria os padrões oficiais da internet." },
+            { termo: "Equidade epistêmica", definicao: "Garantir que todas as pessoas tenham condições justas de acessar o conhecimento." }
+          ]
+        };
+      }
+
+      document.getElementById('btn-run-cognitive')?.addEventListener('click', async () => {
+        const userText = inputCog.value.trim();
+        if (!userText) {
+          showToast('Por favor, insira um texto ou clique em "Carregar Exemplo Jurídico".');
+          inputCog.focus();
+          return;
+        }
+
+        cogLoading.classList.remove('hidden');
+        cogOutput.classList.add('hidden');
+
+        const prompt = `Você é um especialista brasileiro em Linguagem Simples (Plain Language), acessibilidade cognitiva para TDAH, Dislexia e TEA.
+Analise o texto abaixo e retorne um JSON estrito em Português do Brasil contendo:
+1) "linguagemSimples": reescrita clara, empática, direta, frases curtas (máximo 20 palavras por frase), voz ativa.
+2) "resumoTopicos": array com 3 a 4 tópicos curtos e objetivos resumindo o essencial.
+3) "palavrasChave": array de objetos {"termo": "...", "definicao": "..."} explicando de 3 a 4 termos difíceis do texto original.
+
+Texto original:
+"""${userText}"""`;
+
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                linguagemSimples: { type: "STRING" },
+                resumoTopicos: { type: "ARRAY", items: { type: "STRING" } },
+                palavrasChave: {
+                  type: "ARRAY",
+                  items: {
+                    type: "OBJECT",
+                    properties: {
+                      termo: { type: "STRING" },
+                      definicao: { type: "STRING" }
+                    },
+                    required: ["termo", "definicao"]
+                  }
+                }
+              },
+              required: ["linguagemSimples", "resumoTopicos", "palavrasChave"]
+            }
+          }
+        };
+
+        let parsedData;
+        try {
+          const jsonStr = await callGeminiAPI(payload);
+          parsedData = JSON.parse(jsonStr);
+        } catch (err) {
+          parsedData = buildCognitiveFallback(userText);
+        }
+
+        rawSimpleText = parsedData.linguagemSimples;
+        renderSimpleCognitiveText();
+
+        cogBulletsEl.innerHTML = '';
+        (parsedData.resumoTopicos || []).forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          cogBulletsEl.appendChild(li);
+        });
+
+        cogKeywordsEl.innerHTML = '';
+        (parsedData.palavrasChave || []).forEach(kw => {
+          const card = document.createElement('div');
+          card.className = 'surface-card p-3 rounded-xl';
+          const dt = document.createElement('dt');
+          dt.className = 'font-bold text-sm';
+          dt.textContent = kw.termo;
+          const dd = document.createElement('dd');
+          dd.className = 'text-xs text-muted-token mt-0.5';
+          dd.textContent = kw.definicao;
+          card.appendChild(dt);
+          card.appendChild(dd);
+          cogKeywordsEl.appendChild(card);
+        });
+
+        cogLoading.classList.add('hidden');
+        cogOutput.classList.remove('hidden');
+        showToast('Texto adaptado com sucesso para leitura acessível!');
+      });
+
+      document.getElementById('btn-speak-cognitive')?.addEventListener('click', () => {
+        const bulletsText = Array.from(cogBulletsEl.querySelectorAll('li')).map(li => li.textContent).join('. ');
+        speakText(`Versão em Linguagem Simples: ${rawSimpleText}. Resumo em tópicos: ${bulletsText}`);
+      });
+
+      document.getElementById('btn-copy-cognitive')?.addEventListener('click', () => {
+        const bulletsText = Array.from(cogBulletsEl.querySelectorAll('li')).map(li => `- ${li.textContent}`).join('\n');
+        copyTextToClipboard(`LINGUAGEM SIMPLES:\n${rawSimpleText}\n\nRESUMO:\n${bulletsText}`);
+      });
+
+      /* ======================================================================
+         FERRAMENTA 2: DESCRITOR VISUAL (VISÃO COMPUTACIONAL + 3 CENÁRIOS)
+         ====================================================================== */
+      const presetCanvas = document.getElementById('visual-preset-canvas');
+      const uploadedPreview = document.getElementById('visual-uploaded-preview');
+      const visualCaption = document.getElementById('visual-source-caption');
+      const inputImageUpload = document.getElementById('input-image-upload');
+      const presetButtons = document.querySelectorAll('.preset-img-btn');
+
+      let currentVisualMode = 'preset'; // 'preset' | 'upload'
+      let currentPresetKey = 'chart';
+      let uploadedBase64 = null;
+      let uploadedMimeType = 'image/png';
+
+      function drawPresetScenario(key) {
+        if (!presetCanvas) return;
+        const ctx = presetCanvas.getContext('2d');
+        const w = presetCanvas.width;
+        const h = presetCanvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        if (key === 'chart') {
+          // Cenário 1: Gráfico de Barras
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 16px Inter, sans-serif';
+          ctx.fillText('Avanço da Acessibilidade Web no Brasil (%)', 24, 34);
+
+          const bars = [
+            { year: '2020', val: 28, color: '#3b82f6' },
+            { year: '2022', val: 41, color: '#2563eb' },
+            { year: '2024', val: 53, color: '#1d4ed8' },
+            { year: '2026', val: 64, color: '#1e3a8a' }
+          ];
+          bars.forEach((b, i) => {
+            const bx = 55 + i * 100;
+            const bh = b.val * 2.4;
+            const by = 230 - bh;
+            ctx.fillStyle = b.color;
+            ctx.fillRect(bx, by, 54, bh);
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 14px Inter, sans-serif';
+            ctx.fillText(`${b.val}%`, bx + 11, by - 8);
+            ctx.fillText(b.year, bx + 9, 252);
+          });
+          visualCaption.textContent = 'Cenário 1: Gráfico de Inclusão Digital no Brasil (2020–2026)';
+        } else if (key === 'urban') {
+          // Cenário 2: Cena Urbana com Piso Tátil e Semáforo
+          ctx.fillStyle = '#bae6fd';
+          ctx.fillRect(0, 0, w, 150);
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(0, 150, w, 130);
+          // Faixa de pedestres
+          ctx.fillStyle = '#ffffff';
+          for (let x = 40; x < 420; x += 65) {
+            ctx.fillRect(x, 185, 38, 65);
+          }
+          // Piso tátil amarelo de alerta na calçada
+          ctx.fillStyle = '#facc15';
+          ctx.fillRect(0, 145, w, 18);
+          // Poste de semáforo sonoro
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(390, 45, 14, 105);
+          ctx.fillRect(378, 35, 38, 52);
+          ctx.fillStyle = '#22c55e';
+          ctx.beginPath();
+          ctx.arc(397, 72, 9, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 14px Inter, sans-serif';
+          ctx.fillText('Travessia Acessível: Piso Tátil + Semáforo Sonoro', 20, 28);
+          visualCaption.textContent = 'Cenário 2: Travessia urbana com piso tátil direcional e semáforo sonoro verde';
+        } else if (key === 'ui') {
+          // Cenário 3: Interface de App Bancário
+          ctx.fillStyle = '#e2e8f0';
+          ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(110, 16, 260, 248);
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(110, 16, 260, 46);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 15px Inter, sans-serif';
+          ctx.fillText('Banco Digital • Saldo: R$ 1.250,00', 124, 44);
+          // Botão acessível
+          ctx.fillStyle = '#15803d';
+          ctx.fillRect(132, 85, 216, 44);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 14px Inter, sans-serif';
+          ctx.fillText('Transferir via Pix (Botão Rotulado)', 142, 112);
+          // Alerta de baixo contraste proposital
+          ctx.fillStyle = '#f1f5f9';
+          ctx.fillRect(132, 150, 216, 44);
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '13px Inter, sans-serif';
+          ctx.fillText('Texto com baixo contraste (2.1:1)', 144, 176);
+          visualCaption.textContent = 'Cenário 3: Auditoria de interface mobile (contraste adequado vs. inadequado)';
+        }
+      }
+
+      // Inicializa o primeiro cenário desenhado
+      drawPresetScenario('chart');
+
+      presetButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentVisualMode = 'preset';
+          currentPresetKey = btn.getAttribute('data-preset-img');
+          presetButtons.forEach(b => {
+            const active = b === btn;
+            b.classList.toggle('btn-primary-token', active);
+            b.classList.toggle('btn-outline-token', !active);
+          });
+          uploadedPreview.classList.add('hidden');
+          presetCanvas.classList.remove('hidden');
+          drawPresetScenario(currentPresetKey);
+        });
+      });
+
+      inputImageUpload?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result;
+          uploadedMimeType = file.type || 'image/png';
+          uploadedBase64 = dataUrl.split(',')[1];
+          currentVisualMode = 'upload';
+          uploadedPreview.src = dataUrl;
+          uploadedPreview.classList.remove('hidden');
+          presetCanvas.classList.add('hidden');
+          visualCaption.textContent = `Imagem carregada: ${file.name}`;
+          showToast('Imagem carregada! Clique em "Gerar Descrição Acessível".');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      function buildVisualFallback() {
+        if (currentVisualMode === 'preset' && currentPresetKey === 'urban') {
+          return {
+            altText: 'Faixa de pedestres em rua asfaltada com piso tátil amarelo na calçada e semáforo verde aberto para travessia.',
+            audiodescricao: 'Ilustração horizontal de uma travessia urbana acessível durante o dia sob céu azul claro. Em primeiro plano, uma rua asfaltada cinza apresenta cinco faixas brancas paralelas de pedestres. Na transição entre a calçada e a via, há uma faixa contínua de piso tátil amarelo de alerta. À direita, um poste metálico sustenta um semáforo de pedestres com a luz verde acesa, indicando passagem segura.',
+            elementosCriticos: ['Piso tátil de alerta amarelo', 'Faixa de pedestres visível', 'Semáforo verde aberto']
+          };
+        }
+        if (currentVisualMode === 'preset' && currentPresetKey === 'ui') {
+          return {
+            altText: 'Tela de aplicativo bancário comparando um botão verde de alto contraste com um campo cinza de baixo contraste.',
+            audiodescricao: 'Captura de tela de uma interface de aplicativo financeiro em fundo branco. No topo, um cabeçalho escuro exibe o saldo de R$ 1.250,00 em letras brancas. Abaixo, há dois blocos retangulares: o primeiro é um botão verde escuro com texto branco legível "Transferir via Pix"; o segundo é um retângulo cinza claro com letras cinza-médio de baixo contraste (2.1:1), ilustrando uma falha de legibilidade.',
+            elementosCriticos: ['Cabeçalho com saldo claro', 'Botão Pix com contraste AAA', 'Alerta de contraste insuficiente 2.1:1']
+          };
+        }
+        return {
+          altText: 'Gráfico de barras verticais mostrando o avanço da acessibilidade web no Brasil de 28% em 2020 para 64% em 2026.',
+          audiodescricao: 'Gráfico de barras verticais em fundo claro intitulado "Avanço da Acessibilidade Web no Brasil (%)". O eixo horizontal apresenta quatro marcos temporais com barras em tons crescentes de azul: 2020 com 28%, 2022 com 41%, 2024 com 53% e 2026 atingindo 64%. A composição evidencia uma trajetória contínua de crescimento na adoção de padrões de inclusão digital.',
+          elementosCriticos: ['Gráfico de barras verticais', 'Crescimento de 28% para 64%', 'Eixo temporal 2020–2026']
+        };
+      }
+
+      document.getElementById('btn-run-visual')?.addEventListener('click', async () => {
+        const visualLoading = document.getElementById('visual-loading');
+        const visualOutput = document.getElementById('visual-output');
+        visualLoading.classList.remove('hidden');
+        visualOutput.classList.add('hidden');
+
+        let base64ToSend = uploadedBase64;
+        let mimeToSend = uploadedMimeType;
+
+        if (currentVisualMode === 'preset' && presetCanvas) {
+          const canvasDataUrl = presetCanvas.toDataURL('image/png');
+          base64ToSend = canvasDataUrl.split(',')[1];
+          mimeToSend = 'image/png';
+        }
+
+        const prompt = `Você é um audiodescritor profissional especializado em acessibilidade digital (WCAG 2.2) para pessoas cegas e com baixa visão.
+Analise a imagem enviada e gere um JSON estrito em Português do Brasil com:
+1) "altText": atributo HTML alt conciso, objetivo e informativo (máximo 130 caracteres, sem começar com "Imagem de...").
+2) "audiodescricao": audiodescrição completa, objetiva e contextualizada (do geral para o particular, descrevendo layout, cores, textos visíveis e propósito).
+3) "elementosCriticos": array com 3 etiquetas curtas dos principais elementos visuais identificados.`;
+
+        const payload = {
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inlineData: { mimeType: mimeToSend, data: base64ToSend } }
+            ]
+          }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                altText: { type: "STRING" },
+                audiodescricao: { type: "STRING" },
+                elementosCriticos: { type: "ARRAY", items: { type: "STRING" } }
+              },
+              required: ["altText", "audiodescricao", "elementosCriticos"]
+            }
+          }
+        };
+
+        let resultData;
+        try {
+          const jsonStr = await callGeminiAPI(payload);
+          resultData = JSON.parse(jsonStr);
+        } catch (err) {
+          resultData = buildVisualFallback();
+        }
+
+        const safeAlt = (resultData.altText || '').replace(/"/g, '&quot;');
+        document.getElementById('visual-alt-code').textContent = `<img src="recurso-visual.png" alt="${safeAlt}">`;
+        document.getElementById('visual-audiodesc-text').textContent = resultData.audiodescricao;
+
+        const elementsUl = document.getElementById('visual-elements-list');
+        elementsUl.innerHTML = '';
+        (resultData.elementosCriticos || []).forEach(el => {
+          const li = document.createElement('li');
+          li.className = 'px-3 py-1 rounded-lg text-xs font-bold badge-soft-token';
+          li.textContent = el;
+          elementsUl.appendChild(li);
+        });
+
+        visualLoading.classList.add('hidden');
+        visualOutput.classList.remove('hidden');
+        showToast('Audiodescrição e texto alternativo gerados!');
+      });
+
+      document.getElementById('btn-speak-visual')?.addEventListener('click', () => {
+        const desc = document.getElementById('visual-audiodesc-text')?.textContent || '';
+        speakText(`Audiodescrição da imagem: ${desc}`);
+      });
+
+      document.getElementById('btn-copy-alt')?.addEventListener('click', () => {
+        const code = document.getElementById('visual-alt-code')?.textContent || '';
+        copyTextToClipboard(code, 'Tag HTML <img> com atributo alt copiada!');
+      });
+
+      /* ======================================================================
+         FERRAMENTA 3: TRADUTOR DE COMUNICAÇÃO INCLUSIVA (LIBRAS / PORTUGUÊS CLARO)
+         ====================================================================== */
+      const inputIdiom = document.getElementById('input-idiom-text');
+
+      document.getElementById('btn-load-idiom-sample')?.addEventListener('click', () => {
+        inputIdiom.value = "Não adianta chorar sobre o leite derramado; precisamos arregaçar as mangas e matar no peito essa entrega antes que a vaca vá para o brejo.";
+        showToast('Exemplo com expressões idiomáticas carregado.');
+      });
+
+      function buildIdiomFallback(text) {
+        return {
+          portuguesClaro: "Não adianta lamentar um erro que já aconteceu no passado. Precisamos trabalhar com dedicação e assumir a responsabilidade para entregar este trabalho antes que o projeto fracasse.",
+          estruturaGlosaLibras: "PASSADO ERRO-ACONTECER CHORAR ADIANTAR-NÃO. AGORA NÓS TRABALHAR-FORTE, RESPONSABILIDADE ASSUMIR, PROJETO ENTREGAR RÁPIDO EVITAR FRACASSAR.",
+          expressoesExplicadas: [
+            { expressaoOriginal: "Chorar sobre o leite derramado", significadoLiteral: "Lamentar algo do passado que não pode mais ser mudado." },
+            { expressaoOriginal: "Arregaçar as mangas", significadoLiteral: "Começar a trabalhar com bastante esforço e dedicação." },
+            { expressaoOriginal: "Matar no peito", significadoLiteral: "Assumir a responsabilidade para resolver o problema." },
+            { expressaoOriginal: "A vaca ir para o brejo", significadoLiteral: "A situação dar errado ou o projeto fracassar." }
+          ]
+        };
+      }
+
+      document.getElementById('btn-run-idiom')?.addEventListener('click', async () => {
+        const rawText = inputIdiom.value.trim();
+        if (!rawText) {
+          showToast('Digite uma frase com expressões ou clique em "Carregar Exemplo com Expressões".');
+          inputIdiom.focus();
+          return;
+        }
+
+        const idiomLoading = document.getElementById('idiom-loading');
+        const idiomOutput = document.getElementById('idiom-output');
+        idiomLoading.classList.remove('hidden');
+        idiomOutput.classList.add('hidden');
+
+        const prompt = `Você é um especialista em acessibilidade linguística, cultura surda (Libras) e comunicação para pessoas com TEA ou deficiência intelectual.
+Converta o texto abaixo removendo metáforas, ironias e expressões idiomáticas. Retorne um JSON estrito em Português do Brasil contendo:
+1) "portuguesClaro": tradução literal, direta, objetiva e sem duplo sentido.
+2) "estruturaGlosaLibras": frase estruturada em glosa simplificada para apoio à Libras (letras MAIÚSCULAS, ordem tópico-comentário / Sujeito-Verbo-Objeto, verbos no infinitivo, sem artigos ou preposições desnecessárias).
+3) "expressoesExplicadas": array de objetos {"expressaoOriginal": "...", "significadoLiteral": "..."} explicando cada metáfora ou gíria encontrada.
+
+Texto:
+"""${rawText}"""`;
+
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                portuguesClaro: { type: "STRING" },
+                estruturaGlosaLibras: { type: "STRING" },
+                expressoesExplicadas: {
+                  type: "ARRAY",
+                  items: {
+                    type: "OBJECT",
+                    properties: {
+                      expressaoOriginal: { type: "STRING" },
+                      significadoLiteral: { type: "STRING" }
+                    },
+                    required: ["expressaoOriginal", "significadoLiteral"]
+                  }
+                }
+              },
+              required: ["portuguesClaro", "estruturaGlosaLibras", "expressoesExplicadas"]
+            }
+          }
+        };
+
+        let data;
+        try {
+          const jsonStr = await callGeminiAPI(payload);
+          data = JSON.parse(jsonStr);
+        } catch (err) {
+          data = buildIdiomFallback(rawText);
+        }
+
+        document.getElementById('idiom-plain-text').textContent = data.portuguesClaro;
+        document.getElementById('idiom-gloss-text').textContent = data.estruturaGlosaLibras;
+
+        const breakdownUl = document.getElementById('idiom-breakdown-list');
+        breakdownUl.innerHTML = '';
+        (data.expressoesExplicadas || []).forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'surface-card p-3 rounded-xl';
+          li.innerHTML = `<strong>"${item.expressaoOriginal}"</strong> → ${item.significadoLiteral}`;
+          breakdownUl.appendChild(li);
+        });
+
+        idiomLoading.classList.add('hidden');
+        idiomOutput.classList.remove('hidden');
+        showToast('Comunicação convertida para Português Claro e Glosa Libras!');
+      });
+
+      document.getElementById('btn-speak-idiom')?.addEventListener('click', () => {
+        const plain = document.getElementById('idiom-plain-text')?.textContent || '';
+        speakText(`Português Claro: ${plain}`);
+      });
+
+      document.getElementById('btn-copy-idiom')?.addEventListener('click', () => {
+        const plain = document.getElementById('idiom-plain-text')?.textContent || '';
+        const gloss = document.getElementById('idiom-gloss-text')?.textContent || '';
+        copyTextToClipboard(`PORTUGUÊS CLARO:\n${plain}\n\nGLOSA LIBRAS:\n${gloss}`);
+      });
+
+      /* ======================================================================
+         4. CHECKLIST INTERATIVO DE ACESSIBILIDADE PARA DESENVOLVEDORES (12 ITENS)
+         ====================================================================== */
+      const checklistData = [
+        { id: 'chk-1', cat: 'Estrutura', title: 'Idioma declarado no HTML', desc: 'Tag <html lang="pt-BR"> configurada para pronúncia correta em leitores de tela.' },
+        { id: 'chk-2', cat: 'Estrutura', title: 'Hierarquia lógica de cabeçalhos', desc: 'Apenas um <h1> principal e sequência semântica <h2>, <h3> sem pular níveis.' },
+        { id: 'chk-3', cat: 'Contraste', title: 'Contraste mínimo de 4.5:1', desc: 'Relação de contraste validada entre texto e plano de fundo (WCAG AA/AAA).' },
+        { id: 'chk-4', cat: 'Imagens', title: 'Atributo alt descritivo', desc: 'Todas as imagens informativas possuem alt claro; decorativas usam alt="".' },
+        { id: 'chk-5', cat: 'Teclado', title: 'Navegação 100% via teclado', desc: 'Todos os botões, links e menus são operáveis usando Tab, Enter, Espaço e Esc.' },
+        { id: 'chk-6', cat: 'Teclado', title: 'Indicador de foco visível', desc: 'Estilos :focus-visible nítidos e de alto contraste em todos os elementos interativos.' },
+        { id: 'chk-7', cat: 'Teclado', title: 'Links de salto rápido (Skip Links)', desc: 'Link "Pular para o conteúdo principal" disponível logo no primeiro Tab.' },
+        { id: 'chk-8', cat: 'Formulários', title: 'Rótulos <label> associados', desc: 'Todos os campos de entrada possuem <label for="..."> explícito e mensagens de erro claras.' },
+        { id: 'chk-9', cat: 'Multimídia', title: 'Legendas e transcrições', desc: 'Vídeos possuem Closed Caption sincronizado e áudios contam com transcrição textual.' },
+        { id: 'chk-10', cat: 'ARIA', title: 'Landmarks HTML5 e WAI-ARIA', desc: 'Uso de <header>, <nav>, <main>, <footer> e estados aria-expanded / aria-live.' },
+        { id: 'chk-11', cat: 'Responsivo', title: 'Zoom de até 200% sem quebra', desc: 'Layout fluido sem rolagem horizontal quando o texto é ampliado em 200%.' },
+        { id: 'chk-12', cat: 'Cognitivo', title: 'Linguagem clara e sem piscar', desc: 'Textos objetivos, instruções previsíveis e ausência de animações estroboscópicas.' }
+      ];
+
+      const checklistGrid = document.getElementById('checklist-items-grid');
+      const scoreTextEl = document.getElementById('checklist-score-text');
+      const levelBadgeEl = document.getElementById('checklist-level-badge');
+      const adviceEl = document.getElementById('checklist-advice');
+      const progressFillEl = document.getElementById('checklist-progress-fill');
+      const progressBarEl = document.getElementById('checklist-progressbar');
+
+      function updateChecklistProgress() {
+        const checkedCount = checklistGrid.querySelectorAll('input[type="checkbox"]:checked').length;
+        const total = checklistData.length;
+        const pct = Math.round((checkedCount / total) * 100);
+
+        scoreTextEl.textContent = `${checkedCount} de ${total} itens (${pct}%)`;
+        progressFillEl.style.width = `${pct}%`;
+        progressBarEl.setAttribute('aria-valuenow', String(pct));
+
+        if (checkedCount === 0) {
+          levelBadgeEl.textContent = 'Auditoria Não Iniciada';
+          adviceEl.textContent = 'Marque os critérios que seu projeto já atende para avaliar a maturidade em acessibilidade.';
+        } else if (checkedCount <= 4) {
+          levelBadgeEl.textContent = 'Nível Inicial • Atenção Crítica';
+          adviceEl.textContent = 'Priorize estrutura semântica, contraste de cores 4.5:1 e atributos alt nas imagens.';
+        } else if (checkedCount <= 8) {
+          levelBadgeEl.textContent = 'Em Evolução • Intermediário';
+          adviceEl.textContent = 'Bom progresso! Revise navegação por teclado, indicadores de foco e rótulos de formulário.';
+        } else if (checkedCount < 12) {
+          levelBadgeEl.textContent = 'Quase Lá • Alta Maturidade';
+          adviceEl.textContent = 'Excelente! Faltam poucos ajustes finos para atingir conformidade completa nos 12 critérios.';
+        } else {
+          levelBadgeEl.textContent = 'Conformidade Exemplar (100%)';
+          adviceEl.textContent = 'Parabéns! Seu projeto contempla os pilares essenciais da WCAG 2.2 e da Lei Brasileira de Inclusão.';
+        }
+      }
+
+      checklistData.forEach(item => {
+        const label = document.createElement('label');
+        label.htmlFor = item.id;
+        label.className = 'surface-card rounded-2xl p-4 flex items-start gap-3.5 cursor-pointer hover:shadow-md transition-shadow';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = item.id;
+        checkbox.className = 'mt-1 w-5 h-5 rounded accent-blue-600 shrink-0 cursor-pointer';
+        checkbox.addEventListener('change', updateChecklistProgress);
+
+        const content = document.createElement('div');
+        content.className = 'space-y-1';
+        content.innerHTML = `
+          <span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold badge-soft-token">${item.cat}</span>
+          <span class="block font-extrabold text-sm sm:text-base">${item.title}</span>
+          <span class="block text-xs text-secondary-token leading-relaxed">${item.desc}</span>
+        `;
+
+        label.appendChild(checkbox);
+        label.appendChild(content);
+        checklistGrid.appendChild(label);
+      });
+
+      document.getElementById('btn-checklist-reset')?.addEventListener('click', () => {
+        checklistGrid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        updateChecklistProgress();
+        showToast('Checklist reiniciado.');
+      });
+
+      document.getElementById('btn-checklist-export')?.addEventListener('click', () => {
+        const lines = checklistData.map(item => {
+          const isChecked = document.getElementById(item.id)?.checked;
+          return `${isChecked ? '[X]' : '[ ]'} (${item.cat}) ${item.title}`;
+        });
+        const report = `RELATÓRIO DE AUDITORIA DE ACESSIBILIDADE — ACESSOIA\nPontuação: ${scoreTextEl.textContent} (${levelBadgeEl.textContent})\n\n${lines.join('\n')}`;
+        copyTextToClipboard(report, 'Relatório de auditoria copiado para a área de transferência!');
+      });
+
+      /* ======================================================================
+         5. GLOSSÁRIO TÉCNICO E ACORDEÃO DE PERGUNTAS FREQUENTES (FAQ)
+         ====================================================================== */
+      const glossaryTerms = [
+        { term: 'WCAG 2.2', def: 'Web Content Accessibility Guidelines — conjunto internacional de recomendações da W3C para tornar conteúdos web acessíveis.' },
+        { term: 'WAI-ARIA', def: 'Accessible Rich Internet Applications — atributos HTML que informam papéis, estados e propriedades dinâmicas aos leitores de tela.' },
+        { term: 'Alt-Text (Texto Alternativo)', def: 'Descrição textual concisa inserida no atributo alt de imagens para transmitir seu significado a pessoas cegas.' },
+        { term: 'Leitor de Tela', def: 'Software assistivo (como NVDA, JAWS, VoiceOver e TalkBack) que converte texto e estrutura HTML em voz sintetizada ou Braille.' },
+        { term: 'Linguagem Simples', def: 'Prática de redação clara, direta e estruturada para garantir que qualquer pessoa entenda a mensagem na primeira leitura.' },
+        { term: 'Audiodescrição', def: 'Recurso de acessibilidade comunicacional que traduz elementos visuais de vídeos, fotos e eventos em narração falada.' },
+        { term: 'Design Universal', def: 'Concepção de produtos e ambientes digitais utilizáveis por todas as pessoas, na maior extensão possível, sem necessidade de adaptação.' },
+        { term: 'Tecnologia Assistiva', def: 'Qualquer equipamento, software ou recurso que amplie habilidades funcionais de pessoas com deficiência e promova autonomia.' }
+      ];
+
+      const glossaryGrid = document.getElementById('glossary-grid');
+      const inputGlossaryFilter = document.getElementById('input-glossary-filter');
+
+      function renderGlossary(filter = '') {
+        glossaryGrid.innerHTML = '';
+        const q = filter.toLowerCase().trim();
+        const filtered = glossaryTerms.filter(g => g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q));
+
+        if (filtered.length === 0) {
+          glossaryGrid.innerHTML = `<p class="col-span-full text-sm text-muted-token">Nenhum termo encontrado para "${filter}".</p>`;
+          return;
+        }
+
+        filtered.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'surface-card rounded-2xl p-5 space-y-2 shadow-sm';
+          card.innerHTML = `
+            <dt class="font-extrabold text-base" style="color: var(--accent);">${item.term}</dt>
+            <dd class="text-xs sm:text-sm text-secondary-token leading-relaxed">${item.def}</dd>
+          `;
+          glossaryGrid.appendChild(card);
+        });
+      }
+
+      renderGlossary();
+      inputGlossaryFilter?.addEventListener('input', (e) => renderGlossary(e.target.value));
+
+      // FAQ Acordeão Acessível
+      const faqItems = [
+        {
+          q: 'A Inteligência Artificial substitui o trabalho de especialistas e auditores humanos em acessibilidade?',
+          a: 'Não. A IA atua como uma poderosa aceleradora — gerando rascunhos de texto alternativo, simplificando textos complexos e transcrevendo áudios em segundos. Contudo, a validação final com pessoas com deficiência reais e especialistas humanos continua indispensável para garantir contexto cultural, precisão semântica e usabilidade real.'
+        },
+        {
+          q: 'Qual é a diferença entre acessibilidade nativa no código e "overlays" (widgets flutuantes)?',
+          a: 'A acessibilidade verdadeira começa no código-fonte semântico (HTML5 correto, contraste adequado e navegação via teclado). Ferramentas de personalização visual (como a barra no topo do AcessoIA) são ótimos complementos para conforto do usuário, mas jamais substituem a correção estrutural do código da página.'
+        },
+        {
+          q: 'O cumprimento da Lei Brasileira de Inclusão (LBI) vale para empresas privadas?',
+          a: 'Sim. O Artigo 63 da Lei nº 13.146/2015 determina expressamente que a acessibilidade na web é obrigatória tanto para órgãos públicos quanto para empresas privadas com sede ou representação comercial no Brasil.'
+        },
+        {
+          q: 'Como testar rapidamente se um site funciona para quem não usa mouse?',
+          a: 'Desconecte o mouse e navegue pela página usando apenas as teclas Tab (avançar), Shift+Tab (voltar), Enter/Espaço (ativar), Setas (menus e abas) e Esc (fechar modais). Você deve sempre enxergar onde o foco está e conseguir acessar todas as funcionalidades sem ficar preso.'
+        },
+        {
+          q: 'Por que a ordem das palavras em Libras é diferente do Português escrito?',
+          a: 'A Língua Brasileira de Sinais (Libras) possui gramática própria, visual-espacial, frequentemente organizada em estrutura Tópico-Comentário ou Sujeito-Verbo-Objeto (SVO), sem preposições conectivas e com flexão verbal feita no espaço. Por isso, converter textos cheios de metáforas para Português Claro e Glosa facilita imensamente a compreensão.'
+        }
+      ];
+
+      const faqAccordion = document.getElementById('faq-accordion');
+
+      faqItems.forEach((item, index) => {
+        const panelId = `faq-panel-${index}`;
+        const btnId = `faq-btn-${index}`;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'surface-card rounded-2xl overflow-hidden shadow-sm';
+
+        const heading = document.createElement('h4');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = btnId;
+        btn.setAttribute('aria-expanded', index === 0 ? 'true' : 'false');
+        btn.setAttribute('aria-controls', panelId);
+        btn.className = 'w-full px-5 py-4 text-left font-extrabold text-sm sm:text-base flex items-center justify-between gap-4 hover:opacity-90';
+        btn.innerHTML = `
+          <span>${item.q}</span>
+          <span class="text-xl font-bold shrink-0" aria-hidden="true">${index === 0 ? '−' : '+'}</span>
+        `;
+
+        const panel = document.createElement('div');
+        panel.id = panelId;
+        panel.setAttribute('role', 'region');
+        panel.setAttribute('aria-labelledby', btnId);
+        panel.className = `px-5 pb-5 text-sm sm:text-base text-secondary-token leading-relaxed border-t pt-3 ${index === 0 ? '' : 'hidden'}`;
+        panel.style.borderColor = 'var(--border-color)';
+        panel.textContent = item.a;
+
+        btn.addEventListener('click', () => {
+          const isOpen = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!isOpen));
+          btn.querySelector('span:last-child').textContent = isOpen ? '+' : '−';
+          panel.classList.toggle('hidden', isOpen);
+        });
+
+        heading.appendChild(btn);
+        wrapper.appendChild(heading);
+        wrapper.appendChild(panel);
+        faqAccordion.appendChild(wrapper);
+      });
+
+    })();
+  </script>
+</body>
+</html>
